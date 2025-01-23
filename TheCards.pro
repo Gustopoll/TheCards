@@ -16,14 +16,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp
+    src/Screens/DialogScreens/informationaldialogscreen.cpp \
+    src/Screens/GameScreen/gamescreen.cpp \
+    src/Screens/MainScreen/mainscreen.cpp \
+    src/Screens/SettingsScreen/settingsscreen.cpp \
+    src/Screens/screencontroller.cpp \
+    src/main.cpp
 
 HEADERS += \
-    mainwindow.h
+    src/Screens/DialogScreens/informationaldialogscreen.h \
+    src/Screens/GameScreen/gamescreen.h \
+    src/Screens/MainScreen/mainscreen.h \
+    src/Screens/SettingsScreen/settingsscreen.h \
+    src/Screens/screencontroller.h
 
 FORMS += \
-    mainwindow.ui
+    src/Screens/DialogScreens/informationaldialogscreen.ui \
+    src/Screens/GameScreen/gamescreen.ui \
+    src/Screens/MainScreen/mainscreen.ui \
+    src/Screens/SettingsScreen/settingsscreen.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
