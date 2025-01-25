@@ -2,6 +2,7 @@
 #define SCREENCONTROLLER_H
 
 #include "src/Screens/DialogScreens/informationaldialogscreen.h"
+#include "src/Screens/stylesheetcontroller.h"
 
 #include <QWidget>
 #include <QStackedWidget>
@@ -74,6 +75,8 @@ private:
 
     //! All currectly shown warning dialogs.
     std::vector<std::shared_ptr<InformationalDialogScreen>> _warningDialogWindow;
+
+    StyleSheetController styleSheetController;
 };
 
 #endif // SCREENCONTROLLER_H

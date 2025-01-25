@@ -21,6 +21,7 @@ SOURCES += \
     src/Screens/MainScreen/mainscreen.cpp \
     src/Screens/SettingsScreen/settingsscreen.cpp \
     src/Screens/screencontroller.cpp \
+    src/Screens/stylesheetcontroller.cpp \
     src/main.cpp
 
 HEADERS += \
@@ -28,7 +29,8 @@ HEADERS += \
     src/Screens/GameScreen/gamescreen.h \
     src/Screens/MainScreen/mainscreen.h \
     src/Screens/SettingsScreen/settingsscreen.h \
-    src/Screens/screencontroller.h
+    src/Screens/screencontroller.h \
+    src/Screens/stylesheetcontroller.h
 
 FORMS += \
     src/Screens/DialogScreens/informationaldialogscreen.ui \

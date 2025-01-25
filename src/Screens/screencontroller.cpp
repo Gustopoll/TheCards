@@ -56,37 +56,9 @@ void ScreenController::ShowWarningDialog(const QString &text)
                 _warningDialogWindow[i]->ChangeOrderNumber(i);
         });
 
-    QString styleSheet = "QWidget {"
-                             "    background-color: #FFEC8B;"  // Svetlo žltá farba pozadia
-                             "    border: 1px solid #F0E68C;"   // Jemný olivovo žltý okraj
-                             "    border-radius: 5px;"  // Zaoblené rohy
-                             "    padding: 15px;"  // Väčší padding
-                             "} "
 
-                             "QLabel#labelText {"
-                             "    color: #8B4513;"  // Tmavo hnedý text (dobrá kontrastná farba pre žltú)
-                             "    font-size: 14px;"  // Nastavenie veľkosti písma
-                             "    font-weight: bold;"  // Tučné písmo pre lepšiu viditeľnosť
-                             "} "
-
-                             "QPushButton#buttonHide {"
-                             "    background-color: #F0E68C;"  // Tmavšie žlté pozadie tlačidla
-                             "    color: #8B4513;"  // Tmavo hnedý text na tlačidlo
-                             "    border: 1px solid #F0E68C;"  // Žltý okraj
-                             "    padding: 5px 10px;"  // Padding na tlačidle
-                             "    border-radius: 3px;"  // Zaoblené rohy tlačidla
-                             "} "
-
-                             "QPushButton#buttonHide:hover {"
-                             "    background-color: #FFD700;"  // Zlatožltá farba tlačidla pri hover
-                             "    color: #8B4513;"  // Tmavo hnedý text pri hover
-                             "} "
-
-                             "QPushButton#buttonHide:pressed {"
-                             "    background-color: #FF8C00;"  // Oranžová farba pri stlačení
-                             "}";
-
-    item->setStyleSheet(styleSheet);
+    const auto style = styleSheetController.GetStyleSheet(kStyleInformationalDialogPath);
+    item->setStyleSheet(style);
     item->show();
 }
 

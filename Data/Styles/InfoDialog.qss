@@ -1,0 +1,29 @@
+QWidget {
+    background-color: #FFEC8B;
+    border: 1px solid #F0E68C;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+QLabel#labelText {
+    color: #8B4513;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton#buttonHide {
+    background-color: #F0E68C;
+    color: #8B4513;
+    border: 1px solid #F0E68C;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+QPushButton#buttonHide:hover {
+    background-color: #FFD700;
+    color: #8B4513;
+} 
+
+QPushButton#buttonHide:pressed {
+    background-color: #FF8C00;
+};
