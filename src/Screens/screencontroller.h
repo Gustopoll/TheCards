@@ -1,7 +1,7 @@
 #ifndef SCREENCONTROLLER_H
 #define SCREENCONTROLLER_H
 
-#include "src/Screens/DialogScreens/informationaldialogscreen.h"
+#include "src/Screens/Dialogs/infodialog.h"
 #include "src/Screens/stylesheetcontroller.h"
 
 #include <QWidget>
@@ -78,10 +78,11 @@ private:
     QWidget* _mainWidget = nullptr;
     QStackedWidget* _stackedWidget = nullptr;
 
-    //! All currectly shown warning dialogs.
-    std::vector<std::shared_ptr<InformationalDialogScreen>> _warningDialogWindow;
+    //! All currectly shown informational dialogs.
+    std::vector<std::shared_ptr<InfoDialog>> _infoDialog;
 
-    std::vector<uint32_t> _warningDialogToDelete;
+    //! Collection of all positions of info dialog to delete next update (in OnUpdate).
+    std::vector<uint32_t> _infoDialogToDelete;
 
     StyleSheetController styleSheetController;
 };

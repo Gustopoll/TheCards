@@ -16,7 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/Screens/DialogScreens/informationaldialogscreen.cpp \
+    src/Screens/Dialogs/infodialog.cpp \
     src/Screens/GameScreen/gamescreen.cpp \
     src/Screens/MainScreen/mainscreen.cpp \
     src/Screens/SettingsScreen/settingsscreen.cpp \
@@ -25,7 +25,7 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
-    src/Screens/DialogScreens/informationaldialogscreen.h \
+    src/Screens/Dialogs/infodialog.h \
     src/Screens/GameScreen/gamescreen.h \
     src/Screens/MainScreen/mainscreen.h \
     src/Screens/SettingsScreen/settingsscreen.h \
@@ -33,7 +33,7 @@ HEADERS += \
     src/Screens/stylesheetcontroller.h
 
 FORMS += \
-    src/Screens/DialogScreens/informationaldialogscreen.ui \
+    src/Screens/Dialogs/infodialog.ui \
     src/Screens/GameScreen/gamescreen.ui \
     src/Screens/MainScreen/mainscreen.ui \
     src/Screens/SettingsScreen/settingsscreen.ui

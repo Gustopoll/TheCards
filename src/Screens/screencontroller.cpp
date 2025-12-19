@@ -49,16 +49,15 @@ bool ScreenController::ShowScreen(ScreenState screen)
 
 void ScreenController::ShowWarningDialog(const QString &text)
 {
-    auto item = std::make_shared<InformationalDialogScreen>(_mainWidget, _warningDialogWindow.size());
-    _warningDialogWindow.emplace_back(item);
+    auto& item = _infoDialog.emplace_back(std::make_shared<InfoDialog>(_mainWidget, _infoDialog.size()));
     item->SetText(text);
     item->SetOnCloseFunction(
         [this](uint32_t orderNumber)
         {
-            _warningDialogToDelete.push_back(orderNumber);
+            _infoDialogToDelete.push_back(orderNumber);
         });
 
-    const auto style = styleSheetController.GetStyleSheet(kStyleInformationalDialogPath);
+    const auto style = styleSheetController.GetStyleSheet(kStyleInfoDialogPath);
     item->setStyleSheet(style);
     item->show();
 }
@@ -73,7 +72,7 @@ void ScreenController::CleanAll()
         _stackedWidget->removeWidget(_stackedWidget->widget(screenIter.second));
     }
 
-    _warningDialogWindow.clear();
+    _infoDialog.clear();
 
     delete _timer;
     _initialized = false;
@@ -81,11 +80,13 @@ void ScreenController::CleanAll()
 
 void ScreenController::OnUpdate()
 {
-    for (const auto index : _warningDialogToDelete)
+    for (const auto position : _infoDialogToDelete)
     {
-        _warningDialogWindow.erase(_warningDialogWindow.begin() + index);
-        for (size_t i = index; i < _warningDialogWindow.size(); ++i)
-            _warningDialogWindow[i]->ChangeOrderNumber(i);
+        _infoDialog.erase(_infoDialog.begin() + position);
+        for (uint32_t newPosition = position; newPosition < _infoDialog.size(); ++newPosition)
+        {
+            _infoDialog[newPosition]->ChangePosition(newPosition);
+        }
     }
-    _warningDialogToDelete.clear();
+    _infoDialogToDelete.clear();
 }
