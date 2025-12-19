@@ -6,6 +6,7 @@
 
 #include <QWidget>
 #include <QStackedWidget>
+#include <QTimer>
 #include <unordered_map>
 #include <memory>
 #include <functional>
@@ -25,7 +26,7 @@ struct ScreenStateHash
     }
 };
 
-class ScreenController
+class ScreenController : public QObject
 {
 public:
     //! Returns the singleton instance of the ScreenController.
@@ -65,6 +66,10 @@ public:
     void CleanAll();
 
 private:
+    void OnUpdate();
+
+    QTimer* _timer = nullptr;
+
     bool _initialized = false;
 
     //! Maps screen names to their corresponding indexes in the QStackedWidget.
@@ -75,6 +80,8 @@ private:
 
     //! All currectly shown warning dialogs.
     std::vector<std::shared_ptr<InformationalDialogScreen>> _warningDialogWindow;
+
+    std::vector<uint32_t> _warningDialogToDelete;
 
     StyleSheetController styleSheetController;
 };

@@ -12,6 +12,10 @@ void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWi
     _mainWidget = mainWidget;
     _stackedWidget = stackedWidget;
     _initialized = true;
+
+    _timer = new QTimer(this);
+    connect(_timer, &QTimer::timeout, this, &ScreenController::OnUpdate);
+    _timer->start(50);
 }
 
 bool ScreenController::CreateScreen(ScreenState screen, QWidget *widget)
@@ -51,11 +55,8 @@ void ScreenController::ShowWarningDialog(const QString &text)
     item->SetOnCloseFunction(
         [this](uint32_t orderNumber)
         {
-            _warningDialogWindow.erase(_warningDialogWindow.begin() + orderNumber);
-            for (size_t i = orderNumber; i < _warningDialogWindow.size(); ++i)
-                _warningDialogWindow[i]->ChangeOrderNumber(i);
+            _warningDialogToDelete.push_back(orderNumber);
         });
-
 
     const auto style = styleSheetController.GetStyleSheet(kStyleInformationalDialogPath);
     item->setStyleSheet(style);
@@ -74,6 +75,17 @@ void ScreenController::CleanAll()
 
     _warningDialogWindow.clear();
 
+    delete _timer;
     _initialized = false;
 }
 
+void ScreenController::OnUpdate()
+{
+    for (const auto index : _warningDialogToDelete)
+    {
+        _warningDialogWindow.erase(_warningDialogWindow.begin() + index);
+        for (size_t i = index; i < _warningDialogWindow.size(); ++i)
+            _warningDialogWindow[i]->ChangeOrderNumber(i);
+    }
+    _warningDialogToDelete.clear();
+}
