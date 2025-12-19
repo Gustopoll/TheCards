@@ -1,5 +1,5 @@
 #include "mainscreen.h"
-#include "ui_mainwindow.h"
+#include "ui_mainscreen.h"
 
 #include "src/Screens/screencontroller.h"
 #include "src/Screens/GameScreen/gamescreen.h"
