@@ -26,6 +26,20 @@ struct ScreenStateHash
     }
 };
 
+class ScreenWidget : public QWidget
+{
+public:
+    ScreenWidget(QWidget* parent)
+        : QWidget(parent)
+    {};
+
+    //! Calls when screen became active.
+    virtual void OnScreenActive() = 0;
+
+    //! Calls when screen is no longer active.
+    virtual void OnScreenInactive() = 0;
+};
+
 class ScreenController : public QObject
 {
 public:
@@ -47,7 +61,7 @@ public:
     //! @retval false if the ScreenController is not initialized or
     //!               the screen already exists or
     //!               the widget is null.
-    bool CreateScreen(ScreenState screen, QWidget* widget);
+    bool CreateScreen(ScreenState screen, ScreenWidget* widget);
 
     //! Shows the widget based on given screen state.
     //!

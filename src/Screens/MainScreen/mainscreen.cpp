@@ -2,8 +2,8 @@
 #include "ui_mainscreen.h"
 
 #include "src/Screens/screencontroller.h"
-#include "src/Screens/GameScreen/gamescreen.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
+#include "src/Screens/GameScreen/gamescreen.h"
 
 #include "src/Settings/Settings.h"
 

@@ -1,10 +1,8 @@
 #include "settingsscreen.h"
 #include "ui_settingsscreen.h"
 
-#include "src/Screens/screencontroller.h"
-
 SettingsScreen::SettingsScreen(std::vector<Settings>& settings, QWidget *parent) :
-    QWidget(parent),
+    ScreenWidget(parent),
     ui(new Ui::SettingsScreen),
     _settings(settings)
 {
@@ -15,6 +13,16 @@ SettingsScreen::SettingsScreen(std::vector<Settings>& settings, QWidget *parent)
 SettingsScreen::~SettingsScreen()
 {
     delete ui;
+}
+
+void SettingsScreen::OnScreenActive()
+{
+    qDebug() << "settings are active";
+}
+
+void SettingsScreen::OnScreenInactive()
+{
+    qDebug() << "settings are no longer active";
 }
 
 void SettingsScreen::on_pushButton_clicked()

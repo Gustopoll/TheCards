@@ -18,7 +18,7 @@ void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWi
     _timer->start(50);
 }
 
-bool ScreenController::CreateScreen(ScreenState screen, QWidget *widget)
+bool ScreenController::CreateScreen(ScreenState screen, ScreenWidget* widget)
 {
    if (!_initialized)
         return false;
@@ -42,6 +42,16 @@ bool ScreenController::ShowScreen(ScreenState screen)
     const auto idIter = _screenIndexes.find(screen);
     if (idIter == _screenIndexes.end())
         return false;
+
+    if (ScreenWidget* w =  dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
+    {
+        w->OnScreenInactive();
+    }
+
+    if (ScreenWidget* w = dynamic_cast<ScreenWidget*>(_stackedWidget->widget(idIter->second)))
+    {
+        w->OnScreenActive();
+    }
 
     _stackedWidget->setCurrentIndex(idIter->second);
     return true;
