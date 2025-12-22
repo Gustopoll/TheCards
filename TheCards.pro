@@ -17,6 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     External/pugixml/pugixml.cpp \
+    src/Drawing/Animations/animationmanager.cpp \
+    src/Drawing/Animations/animationrotate.cpp \
+    src/Drawing/Animations/animationscale.cpp \
+    src/Drawing/Entities/drawingentity.cpp \
+    src/Drawing/Entities/drawinggroup.cpp \
+    src/Drawing/Widgets/drawingwidget.cpp \
+    src/GameLogic/game.cpp \
     src/Screens/Dialogs/infodialog.cpp \
     src/Screens/GameScreen/gamescreen.cpp \
     src/Screens/MainScreen/mainscreen.cpp \
@@ -29,6 +36,15 @@ SOURCES += \
 HEADERS += \
     External/pugixml/pugiconfig.hpp \
     External/pugixml/pugixml.hpp \
+    src/Drawing/Animations/IAnimation.h \
+    src/Drawing/Animations/animationmanager.h \
+    src/Drawing/Animations/animationrotate.h \
+    src/Drawing/Animations/animationscale.h \
+    src/Drawing/Constants.h \
+    src/Drawing/Entities/drawingentity.h \
+    src/Drawing/Entities/drawinggroup.h \
+    src/Drawing/Widgets/drawingwidget.h \
+    src/GameLogic/game.h \
     src/Screens/Dialogs/infodialog.h \
     src/Screens/GameScreen/gamescreen.h \
     src/Screens/MainScreen/mainscreen.h \
