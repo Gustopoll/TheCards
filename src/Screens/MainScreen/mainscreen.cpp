@@ -5,16 +5,30 @@
 #include "src/Screens/GameScreen/gamescreen.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 
+#include "src/Settings/Settings.h"
+
 #include <QDebug>
+
+namespace
+{
+
+std::vector<Settings> AllSettings;
+
+}
 
 MainScreen::MainScreen(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainScreen)
 {
     ui->setupUi(this);
+
+    AllSettings.emplace_back("Data/Settings/Network");
+    AllSettings[0].SetSettingDefault("Network/ServerPort", "3652");
+    AllSettings[0].ReadSettings();
+
     ScreenController::Get().Initialize(this, ui->stackedWidget);
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen());
-    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen());
+    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(AllSettings));
 }
 
 MainScreen::~MainScreen()

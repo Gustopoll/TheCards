@@ -16,21 +16,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    External/pugixml/pugixml.cpp \
     src/Screens/Dialogs/infodialog.cpp \
     src/Screens/GameScreen/gamescreen.cpp \
     src/Screens/MainScreen/mainscreen.cpp \
     src/Screens/SettingsScreen/settingsscreen.cpp \
     src/Screens/screencontroller.cpp \
     src/Screens/stylesheetcontroller.cpp \
+    src/Settings/Settings.cpp \
     src/main.cpp
 
 HEADERS += \
+    External/pugixml/pugiconfig.hpp \
+    External/pugixml/pugixml.hpp \
     src/Screens/Dialogs/infodialog.h \
     src/Screens/GameScreen/gamescreen.h \
     src/Screens/MainScreen/mainscreen.h \
     src/Screens/SettingsScreen/settingsscreen.h \
     src/Screens/screencontroller.h \
-    src/Screens/stylesheetcontroller.h
+    src/Screens/stylesheetcontroller.h \
+    src/Settings/Settings.h
 
 FORMS += \
     src/Screens/Dialogs/infodialog.ui \
