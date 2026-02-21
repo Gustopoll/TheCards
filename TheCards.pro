@@ -26,6 +26,8 @@ SOURCES += \
     src/GameLogic/game.cpp \
     src/Screens/Dialogs/infodialog.cpp \
     src/Screens/GameScreen/gamescreen.cpp \
+    src/Screens/Loadings/datapreloader.cpp \
+    src/Screens/Loadings/initloading.cpp \
     src/Screens/MainScreen/mainscreen.cpp \
     src/Screens/SettingsScreen/settingsscreen.cpp \
     src/Screens/screencontroller.cpp \
@@ -47,6 +49,8 @@ HEADERS += \
     src/GameLogic/game.h \
     src/Screens/Dialogs/infodialog.h \
     src/Screens/GameScreen/gamescreen.h \
+    src/Screens/Loadings/datapreloader.h \
+    src/Screens/Loadings/initloading.h \
     src/Screens/MainScreen/mainscreen.h \
     src/Screens/SettingsScreen/settingsscreen.h \
     src/Screens/screencontroller.h \
@@ -56,6 +60,7 @@ HEADERS += \
 FORMS += \
     src/Screens/Dialogs/infodialog.ui \
     src/Screens/GameScreen/gamescreen.ui \
+    src/Screens/Loadings/initloading.ui \
     src/Screens/MainScreen/mainscreen.ui \
     src/Screens/SettingsScreen/settingsscreen.ui
 

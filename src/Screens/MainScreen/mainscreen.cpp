@@ -4,17 +4,9 @@
 #include "src/Screens/screencontroller.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 #include "src/Screens/GameScreen/gamescreen.h"
-
-#include "src/Settings/Settings.h"
+#include "src/Screens/Loadings/initloading.h"
 
 #include <QDebug>
-
-namespace
-{
-
-std::vector<Settings> AllSettings;
-
-}
 
 MainScreen::MainScreen(QWidget *parent)
     : QMainWindow(parent)
@@ -22,13 +14,16 @@ MainScreen::MainScreen(QWidget *parent)
 {
     ui->setupUi(this);
 
-    AllSettings.emplace_back("Data/Settings/Network");
-    AllSettings[0].SetSettingDefault("Network/ServerPort", "3652");
-    AllSettings[0].ReadSettings();
+    _allSettings.emplace_back("Data/Settings/Network");
+    _allSettings[0].SetSettingDefault("Network/ServerPort", "3652");
+    _allSettings[0].ReadSettings();
 
     ScreenController::Get().Initialize(this, ui->stackedWidget);
+    ScreenController::Get().CreateScreen(ScreenState::InitLoading, new InitLoading(_dataPreloader));
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen());
-    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(AllSettings));
+    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_allSettings));
+
+    //ScreenController::Get().ShowScreen(ScreenState::InitLoading);
 }
 
 MainScreen::~MainScreen()
@@ -51,4 +46,8 @@ void MainScreen::on_pushButton_clicked()
 void MainScreen::on_pushButton_2_clicked()
 {
     ScreenController::Get().ShowScreen(ScreenState::Settings);
+}
+
+void MainScreen::LoadData()
+{
 }

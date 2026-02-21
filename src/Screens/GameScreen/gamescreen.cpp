@@ -18,6 +18,12 @@ GameScreen::~GameScreen()
 void GameScreen::OnScreenActive()
 {
     qDebug() << "game are active";
+    if (!_game)
+    {
+        qDebug() << "init game started";
+        _game.emplace();
+        qDebug() << "inint game ended";
+    }
 }
 
 void GameScreen::OnScreenInactive()

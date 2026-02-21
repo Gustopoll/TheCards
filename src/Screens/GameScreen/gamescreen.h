@@ -2,6 +2,7 @@
 #define GAMESCREEN_H
 
 #include "src/Screens/screencontroller.h"
+#include "src/GameLogic/game.h"
 
 #include <QWidget>
 
@@ -25,6 +26,8 @@ private slots:
 
 private:
     Ui::GameScreen *ui;
+
+    std::optional<Game> _game;
 };
 
 #endif // GAMESCREEN_H

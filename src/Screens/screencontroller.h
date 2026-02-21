@@ -14,6 +14,7 @@
 enum class ScreenState
 {
     Main,
+    InitLoading,
     Game,
     Settings
 };
