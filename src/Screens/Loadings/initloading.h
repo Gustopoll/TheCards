@@ -4,6 +4,7 @@
 #include "src/Screens/screencontroller.h"
 #include "src/Utils/datapreloader.h"
 #include <QWidget>
+#include <QFutureWatcher>
 
 namespace Ui {
 class InitLoading;
@@ -22,6 +23,11 @@ public:
 
 private:
     Ui::InitLoading *ui;
+
+    QFutureWatcher<void>* watcher;
+
+    size_t _countPreloadedData = 0;
+    size_t _countDataToPreload = 0;
 
     DataPreloader& _dataPreloader;
 };

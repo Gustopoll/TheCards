@@ -18,17 +18,63 @@ MainScreen::MainScreen(QWidget *parent)
     _allSettings[0].SetSettingDefault("Network/ServerPort", "3652");
     _allSettings[0].ReadSettings();
 
+    std::vector<std::string> cardPaths
+    {
+        "Data/Cards/A-0A.png",
+        "Data/Cards/A-07.png",
+        "Data/Cards/A-08.png",
+        "Data/Cards/A-09.png",
+        "Data/Cards/A-10.png",
+        "Data/Cards/A-J1.png",
+        "Data/Cards/A-J2.png",
+        "Data/Cards/A-KI.png",
+        "Data/Cards/B-0A.png",
+        "Data/Cards/B-07.png",
+        "Data/Cards/B-08.png",
+        "Data/Cards/B-09.png",
+        "Data/Cards/B-10.png",
+        "Data/Cards/B-J1.png",
+        "Data/Cards/B-J2.png",
+        "Data/Cards/B-KI.png",
+        "Data/Cards/H-0A.png",
+        "Data/Cards/H-07.png",
+        "Data/Cards/H-08.png",
+        "Data/Cards/H-09.png",
+        "Data/Cards/H-10.png",
+        "Data/Cards/H-J1.png",
+        "Data/Cards/H-J2.png",
+        "Data/Cards/H-KI.png",
+        "Data/Cards/L-0A.png",
+        "Data/Cards/L-07.png",
+        "Data/Cards/L-08.png",
+        "Data/Cards/L-09.png",
+        "Data/Cards/L-10.png",
+        "Data/Cards/L-J1.png",
+        "Data/Cards/L-J2.png",
+        "Data/Cards/L-KI.png"
+    };
+    _dataPreloader.PreloadImages("CardGroup", cardPaths);
+
     ScreenController::Get().Initialize(this, ui->stackedWidget);
     ScreenController::Get().CreateScreen(ScreenState::InitLoading, new InitLoading(_dataPreloader));
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen());
     ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_allSettings));
-
-    //ScreenController::Get().ShowScreen(ScreenState::InitLoading);
 }
 
 MainScreen::~MainScreen()
 {
     delete ui;
+}
+
+void MainScreen::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+
+    static bool started = false;
+    if (!started)
+    {
+        ScreenController::Get().ShowScreen(ScreenState::InitLoading);
+    }
 }
 
 void MainScreen::closeEvent(QCloseEvent *event)

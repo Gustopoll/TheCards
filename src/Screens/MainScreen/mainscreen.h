@@ -28,6 +28,7 @@ private:
 
     Ui::MainScreen *ui;
 
+    void showEvent(QShowEvent *event);
     void closeEvent(QCloseEvent *event);
 
     std::vector<Settings> _allSettings;

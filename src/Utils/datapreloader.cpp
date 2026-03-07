@@ -1,46 +1,57 @@
 #include "datapreloader.h"
 
+#include <QImage>
+
 DataPreloader::DataPreloader() {}
 
 void DataPreloader::LoadAll()
 {
     for (auto& [groupName, data] : _preloadedImages)
     {
-        for (const auto& path : data.paths)
+        if (!data.images.empty())
         {
-            auto& image = data.images.emplace_back();
-            image->load(path.c_str());
-            _loadedImageEvent.Fire(groupName, path);
+            // Group is already loaded.
+            continue;
         }
 
-        _allImagesLoadedEvent.Fire(groupName);
+        for (const auto& path : data.paths)
+        {
+            auto& image = data.images.emplace_back(std::make_shared<QImage>());
+            bool isLoaded = image->load(path.c_str());
+            _imageLoadedEvent.Fire(groupName, path, isLoaded);
+        }
+
+        _imageLoadingFinishedEvent.Fire(groupName);
     }
 
     // Pass emptry string to indicate that all the images are loaded.
-    _allImagesLoadedEvent.Fire("");
+    _imageLoadingFinishedEvent.Fire("");
 }
 
 void DataPreloader::LoadImageGroup(const std::string& groupName)
 {
     auto groupIter = _preloadedImages.find(groupName);
     if (groupIter == _preloadedImages.end())
+    {
         return;
+    }
 
     auto& group = groupIter->second;
     if (!group.images.empty())
     {
         // Images are already loaded.
+        _imageLoadingFinishedEvent.Fire(groupName);
         return;
     }
 
     for (const auto& path : groupIter->second.paths)
     {
-        auto& image = groupIter->second.images.emplace_back();
-        image->load(path.c_str());
-        _loadedImageEvent.Fire(groupName, path);
+        auto& image = groupIter->second.images.emplace_back(std::make_shared<QImage>());
+        bool isLoaded = image->load(path.c_str());
+        _imageLoadedEvent.Fire(groupName, path, isLoaded);
     }
 
-    _allImagesLoadedEvent.Fire(groupName);
+    _imageLoadingFinishedEvent.Fire(groupName);
 }
 
 void DataPreloader::PreloadImages(const std::string& groupName, const std::vector<std::string>& paths)
@@ -56,4 +67,15 @@ std::vector<std::shared_ptr<QImage>> DataPreloader::GetPreloadedImages(const std
         return images->second.images;
     }
     return {};
+}
+
+size_t DataPreloader::GetPreloadedImagesCount(const std::string& groupName)
+{
+    if (const auto& images = _preloadedImages.find(groupName);
+        images != _preloadedImages.end())
+    {
+        return images->second.paths.size();
+    }
+
+    return 0;
 }

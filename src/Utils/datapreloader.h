@@ -16,15 +16,17 @@ class DataPreloader
         std::vector<std::shared_ptr<QImage>> images;
     };
 
-    using LoadedImageEvent = EventHandler<
+    using ImageLoadedEvent = EventHandler<
         //! Name of the group that image is loaded from.
         std::string,
         //! Path of the loaded image.
-        std::string>;
+        std::string,
+        //! True when the image is succesfully loaded otherwise false.
+        bool>;
 
-    using AllImagesLoadedEvent = EventHandler<
+    using ImageLoadingFinishedEvent = EventHandler<
         //! Name of the group that all the images is loaded from.
-        //! Emtpty string when all the images are loaded.
+        //! Empty string when all the images are loaded.
         std::string>;
 
 public:
@@ -44,18 +46,21 @@ public:
     //! Gets all the preloaded images by the group name.
     std::vector<std::shared_ptr<QImage>> GetPreloadedImages(const std::string& groupName);
 
-    LoadedImageEvent::Subscriber& GetLoadedImageEvent()
+    //! Gets the size of the images to preload.
+    size_t GetPreloadedImagesCount(const std::string& groupName);
+
+    ImageLoadedEvent::Subscriber& GetImageLoadedEvent()
     {
-        return _loadedImageEvent.GetSubscriber();
+        return _imageLoadedEvent.GetSubscriber();
     }
 
-    AllImagesLoadedEvent::Subscriber& GetAllImagesLoadedEvent()
+    ImageLoadingFinishedEvent::Subscriber& GetImageLoadingFinishedEvent()
     {
-        return _allImagesLoadedEvent.GetSubscriber();
+        return _imageLoadingFinishedEvent.GetSubscriber();
     }
 private:
-    LoadedImageEvent _loadedImageEvent;
-    AllImagesLoadedEvent _allImagesLoadedEvent;
+    ImageLoadedEvent _imageLoadedEvent;
+    ImageLoadingFinishedEvent _imageLoadingFinishedEvent;
 
     std::unordered_map<std::string, PreloadedImageData> _preloadedImages;
 };

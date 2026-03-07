@@ -48,12 +48,13 @@ bool ScreenController::ShowScreen(ScreenState screen)
         w->OnScreenInactive();
     }
 
-    if (ScreenWidget* w = dynamic_cast<ScreenWidget*>(_stackedWidget->widget(idIter->second)))
+    _stackedWidget->setCurrentIndex(idIter->second);
+
+    if (ScreenWidget* w = dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
     {
         w->OnScreenActive();
     }
 
-    _stackedWidget->setCurrentIndex(idIter->second);
     return true;
 }
 
