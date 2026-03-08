@@ -62,14 +62,24 @@ void ScreenController::ShowWarningDialog(const QString &text)
 {
     auto& item = _infoDialog.emplace_back(std::make_shared<InfoDialog>(_mainWidget, _infoDialog.size()));
     item->SetText(text);
-    item->SetOnCloseFunction(
+
+    item->GetCloseDialogEvent().Subscribe(
         [this](uint32_t orderNumber)
         {
             _infoDialogToDelete.push_back(orderNumber);
         });
 
     const auto style = styleSheetController.GetStyleSheet(kStyleInfoDialogPath);
-    item->setStyleSheet(style);
+    if (style.isEmpty())
+    {
+        QString message = std::format("Unable to load a style from:<br>'{}'", kStyleInfoDialogPath).c_str();
+        item->SetText(message);
+    }
+    else
+    {
+        item->setStyleSheet(style);
+    }
+
     item->show();
 }
 

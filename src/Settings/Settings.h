@@ -5,7 +5,7 @@
 
 #include "External/pugixml/pugixml.hpp"
 
-typedef std::map<std::string, std::string> SettingsStringValues;
+using SettingsStringValues = std::map<std::string, std::string>;
 
 class Settings
 {

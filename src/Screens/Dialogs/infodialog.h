@@ -1,10 +1,9 @@
 #ifndef INFODIALOG_H
 #define INFODIALOG_H
 
-#include <QWidget>
-#include <functional>
+#include "src/Utils/eventhandler.h"
 
-using OnClose = std::function<void(uint32_t)>;
+#include <QWidget>
 
 namespace Ui {
 class InfoDialog;
@@ -15,18 +14,27 @@ class InfoDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit InfoDialog(
+
+    //! Event called when dialog is closed.
+    using CloseDialogEvent = EventHandler<
+        //! Position of closed dialog.
+        uint32_t>;
+
+    InfoDialog(
         QWidget *parent = nullptr,
         uint32_t orderNumber = 0);
     ~InfoDialog();
 
     void SetText(const QString& text);
 
-    //! Sets the function called when window is closed.
-    void SetOnCloseFunction(OnClose callback) { _onCloseCallback = callback;}
-
     //! Changes position of dialog.
     void ChangePosition(uint32_t position);
+
+    CloseDialogEvent::Subscriber& GetCloseDialogEvent()
+    {
+        return _closeDialogEvent.GetSubscriber();
+    }
+
 private slots:
     void on_buttonHide_clicked();
 
@@ -35,7 +43,8 @@ private:
 
     //! Represents how many dialog windows are shown above this dialog.
     uint32_t _position = 0;
-    OnClose _onCloseCallback = nullptr;
+
+    CloseDialogEvent _closeDialogEvent;
 };
 
 #endif // INFODIALOG_H

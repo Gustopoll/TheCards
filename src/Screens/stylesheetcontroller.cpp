@@ -23,11 +23,7 @@ const QString StyleSheetController::GetStyleSheet(const QString &path)
 
     QFile file(fullPath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QString message = "Unable to load a style from:<br>'" + fullPath + "'";
-        ScreenController::Get().ShowWarningDialog(message);
         return {};
-    }
 
     QString data = file.readAll();
     _cache.insert({path.toStdString(), data});
