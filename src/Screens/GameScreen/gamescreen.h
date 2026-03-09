@@ -28,6 +28,8 @@ private:
     Ui::GameScreen *ui;
 
     std::optional<Game> _game;
+
+    QWidget* _parent;
 };
 
 #endif // GAMESCREEN_H

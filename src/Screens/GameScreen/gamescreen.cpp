@@ -8,6 +8,7 @@ GameScreen::GameScreen(QWidget *parent) :
     ui(new Ui::GameScreen)
 {
     ui->setupUi(this);
+    _parent = parent;
 }
 
 GameScreen::~GameScreen()

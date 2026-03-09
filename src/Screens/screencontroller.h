@@ -5,6 +5,7 @@
 #include "src/Screens/stylesheetcontroller.h"
 
 #include <QWidget>
+#include <QMainWindow>
 #include <QStackedWidget>
 #include <QTimer>
 #include <unordered_map>
@@ -14,7 +15,6 @@
 enum class ScreenState
 {
     Main,
-    InitLoading,
     Game,
     Settings
 };
@@ -99,7 +99,7 @@ private:
     //! Collection of all positions of info dialog to delete next update (in OnUpdate).
     std::vector<uint32_t> _infoDialogToDelete;
 
-    StyleSheetController styleSheetController;
+    StyleSheetController _styleSheetController;
 };
 
 #endif // SCREENCONTROLLER_H

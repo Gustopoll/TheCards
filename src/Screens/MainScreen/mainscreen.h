@@ -18,6 +18,7 @@ public:
     MainScreen(QWidget *parent = nullptr);
     ~MainScreen();
 
+    void Start();
 private slots:
     void on_pushButton_clicked();
 
@@ -28,12 +29,12 @@ private:
 
     Ui::MainScreen *ui;
 
-    void showEvent(QShowEvent *event);
     void closeEvent(QCloseEvent *event);
 
     std::vector<Settings> _allSettings;
 
     DataPreloader _dataPreloader;
 
+    QMainWindow* _loadingScreen = nullptr;
 };
 #endif // MAINWINDOW_H

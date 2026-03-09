@@ -1,5 +1,7 @@
-#include "initloading.h"
-#include "ui_initloading.h"
+#include "loadingscreen.h"
+#include "ui_loadingscreen.h"
+
+#include "src/Screens/screencontroller.h"
 
 #include <QtConcurrent>
 
@@ -10,21 +12,28 @@ constexpr char kCardGroup[] = "CardGroup";
 
 }
 
-InitLoading::InitLoading(DataPreloader& dataPreloader, QWidget *parent)
-    : ScreenWidget(parent)
-    , ui(new Ui::InitLoading)
+LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::LoadingScreen)
     , _dataPreloader(dataPreloader)
 {
     ui->setupUi(this);
+    setWindowFlag(Qt::FramelessWindowHint, true);
 
     watcher = new QFutureWatcher<void>();
+    _countPreloadedData = 0;
+    _countDataToPreload = _dataPreloader.GetPreloadedImagesCount(kCardGroup);
+    ui->progressBar->setValue(_countPreloadedData);
+    ui->progressBar->setMaximum(_countDataToPreload);
 
     connect(
         watcher,
         &QFutureWatcher<void>::finished,
         this,
-        []()
+        [this, parent]()
         {
+            parent->show();
+            hide();
             ScreenController::Get().ShowScreen(ScreenState::Game);
         });
 
@@ -45,28 +54,24 @@ InitLoading::InitLoading(DataPreloader& dataPreloader, QWidget *parent)
                 path));
 
             qDebug() << text;
+            ui->progressBar->setValue(_countPreloadedData);
             ui->textLoading->setText(text);
         });
 
+    watcher->setFuture(QtConcurrent::run(
+        [this]()
+        {
+            _dataPreloader.LoadImageGroup(kCardGroup);
+        }));
 }
 
-InitLoading::~InitLoading()
+LoadingScreen::~LoadingScreen()
 {
     delete ui;
 }
 
-void InitLoading::OnScreenActive()
+void LoadingScreen::on_closeButton_clicked()
 {
-    _countDataToPreload = _dataPreloader.GetPreloadedImagesCount(kCardGroup);
-    _countPreloadedData = 0;
-
-    watcher->setFuture(QtConcurrent::run([this]()
-    {
-        _dataPreloader.LoadImageGroup(kCardGroup);
-    }));
+    exit(0);
 }
 
-void InitLoading::OnScreenInactive()
-{
-
-}

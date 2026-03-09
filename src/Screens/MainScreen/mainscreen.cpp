@@ -4,7 +4,7 @@
 #include "src/Screens/screencontroller.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 #include "src/Screens/GameScreen/gamescreen.h"
-#include "src/Screens/Loadings/initloading.h"
+#include "src/Screens/Loadings/loadingscreen.h"
 
 #include <QDebug>
 
@@ -14,9 +14,12 @@ MainScreen::MainScreen(QWidget *parent)
 {
     ui->setupUi(this);
 
+    _allSettings.emplace_back("Data/Settings/General");
     _allSettings.emplace_back("Data/Settings/Network");
-    _allSettings[0].SetSettingDefault("Network/ServerPort", "3652");
+    _allSettings[0].SetSettingDefault("General/Fullscreen", "false");
+    _allSettings[1].SetSettingDefault("Network/ServerPort", "3652");
     _allSettings[0].ReadSettings();
+    _allSettings[1].ReadSettings();
 
     std::vector<std::string> cardPaths
     {
@@ -56,9 +59,8 @@ MainScreen::MainScreen(QWidget *parent)
     _dataPreloader.PreloadImages("CardGroup", cardPaths);
 
     ScreenController::Get().Initialize(this, ui->stackedWidget);
-    ScreenController::Get().CreateScreen(ScreenState::InitLoading, new InitLoading(_dataPreloader));
-    ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen());
-    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_allSettings));
+    ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(this));
+    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_allSettings, this));
 }
 
 MainScreen::~MainScreen()
@@ -66,19 +68,15 @@ MainScreen::~MainScreen()
     delete ui;
 }
 
-void MainScreen::showEvent(QShowEvent *event)
+void MainScreen::Start()
 {
-    QMainWindow::showEvent(event);
-
-    static bool started = false;
-    if (!started)
-    {
-        ScreenController::Get().ShowScreen(ScreenState::InitLoading);
-    }
+    _loadingScreen = new LoadingScreen(_dataPreloader, this);
+    _loadingScreen->show();
 }
 
 void MainScreen::closeEvent(QCloseEvent *event)
 {
+    Q_UNUSED(event);
     qDebug() << "closeEvent";
     ScreenController::Get().CleanAll();
 }
@@ -91,7 +89,11 @@ void MainScreen::on_pushButton_clicked()
 
 void MainScreen::on_pushButton_2_clicked()
 {
-    ScreenController::Get().ShowScreen(ScreenState::Settings);
+    //hide();
+    //ScreenController::Get().ShowScreen(ScreenState::Settings);
+    //setWindowFlags(Qt::FramelessWindowHint);
+    //show();
+    //setGeometry(g);
 }
 
 void MainScreen::LoadData()

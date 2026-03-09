@@ -24,10 +24,14 @@ private slots:
 
     void on_serverPort_textChanged();
 
+    void on_checkBoxFullscreen_checkStateChanged(const Qt::CheckState &arg1);
+
 private:
     Ui::SettingsScreen *ui;
 
     std::vector<Settings>& _settings;
+
+    QWidget* _parent = nullptr;
 };
 
 #endif // SETTINGSSCREEN_H

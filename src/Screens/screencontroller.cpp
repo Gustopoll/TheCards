@@ -69,7 +69,7 @@ void ScreenController::ShowWarningDialog(const QString &text)
             _infoDialogToDelete.push_back(orderNumber);
         });
 
-    const auto style = styleSheetController.GetStyleSheet(kStyleInfoDialogPath);
+    const auto style = _styleSheetController.GetStyleSheet(kStyleInfoDialogPath);
     if (style.isEmpty())
     {
         QString message = std::format("Unable to load a style from:<br>'{}'", kStyleInfoDialogPath).c_str();
