@@ -1,7 +1,7 @@
 #include "loadingscreen.h"
 #include "ui_loadingscreen.h"
 
-#include "src/Screens/screencontroller.h"
+#include "src/Screens/MainScreen/mainscreen.h"
 
 #include <QtConcurrent>
 
@@ -9,11 +9,10 @@ namespace
 {
 
 constexpr char kCardGroup[] = "CardGroup";
-
 }
 
-LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, QWidget *parent)
-    : QMainWindow(parent)
+LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
+    : QMainWindow(reinterpret_cast<QMainWindow*>(parent))
     , ui(new Ui::LoadingScreen)
     , _dataPreloader(dataPreloader)
 {
@@ -30,11 +29,9 @@ LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, QWidget *parent)
         watcher,
         &QFutureWatcher<void>::finished,
         this,
-        [this, parent]()
+        [parent]()
         {
-            parent->show();
-            hide();
-            ScreenController::Get().ShowScreen(ScreenState::Game);
+            parent->OnLoadingFinished();
         });
 
     _dataPreloader.GetImageLoadedEvent().Subscribe(

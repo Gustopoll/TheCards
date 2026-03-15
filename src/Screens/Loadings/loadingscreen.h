@@ -2,7 +2,6 @@
 #define LOADINGSCREEN_H
 
 #include "src/Utils/datapreloader.h"
-
 #include <QFutureWatcher>
 #include <QMainWindow>
 
@@ -10,12 +9,14 @@ namespace Ui {
 class LoadingScreen;
 }
 
+class MainScreen;
+
 class LoadingScreen : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    LoadingScreen(DataPreloader& dataPreloader, QWidget *parent = nullptr);
+    LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent = nullptr);
     ~LoadingScreen();
 
 private slots:

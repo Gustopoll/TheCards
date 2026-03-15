@@ -1,6 +1,6 @@
-QT       += core gui concurrent
+QT       += core gui concurrent widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4)
 
 CONFIG += c++20
 
@@ -31,7 +31,8 @@ SOURCES += \
     src/Screens/SettingsScreen/settingsscreen.cpp \
     src/Screens/screencontroller.cpp \
     src/Screens/stylesheetcontroller.cpp \
-    src/Settings/Settings.cpp \
+    src/Settings/settingscontroller.cpp \
+    src/Settings/settingswriter.cpp \
     src/Utils/datapreloader.cpp \
     src/Utils/eventhandler.cpp \
     src/main.cpp
@@ -55,7 +56,8 @@ HEADERS += \
     src/Screens/SettingsScreen/settingsscreen.h \
     src/Screens/screencontroller.h \
     src/Screens/stylesheetcontroller.h \
-    src/Settings/Settings.h \
+    src/Settings/settingscontroller.h \
+    src/Settings/settingswriter.h \
     src/Utils/datapreloader.h \
     src/Utils/eventhandler.h
 

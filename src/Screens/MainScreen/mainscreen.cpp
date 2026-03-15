@@ -6,6 +6,7 @@
 #include "src/Screens/GameScreen/gamescreen.h"
 #include "src/Screens/Loadings/loadingscreen.h"
 
+#include <QScreen>
 #include <QDebug>
 
 MainScreen::MainScreen(QWidget *parent)
@@ -13,13 +14,6 @@ MainScreen::MainScreen(QWidget *parent)
     , ui(new Ui::MainScreen)
 {
     ui->setupUi(this);
-
-    _allSettings.emplace_back("Data/Settings/General");
-    _allSettings.emplace_back("Data/Settings/Network");
-    _allSettings[0].SetSettingDefault("General/Fullscreen", "false");
-    _allSettings[1].SetSettingDefault("Network/ServerPort", "3652");
-    _allSettings[0].ReadSettings();
-    _allSettings[1].ReadSettings();
 
     std::vector<std::string> cardPaths
     {
@@ -60,7 +54,36 @@ MainScreen::MainScreen(QWidget *parent)
 
     ScreenController::Get().Initialize(this, ui->stackedWidget);
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(this));
-    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_allSettings, this));
+    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_settingsController, this));
+
+    _settingsController.GetSettingChangedEvent().Subscribe(
+        [this](const std::string& path, const std::string& value)
+        {
+            if (path != Settings::GeneralFullscreen)
+                return;
+
+            qDebug() << "setting is changed";
+            if (value == "true")
+            {
+                hide();
+                const auto* screen = QGuiApplication::primaryScreen();
+                setGeometry(screen->virtualGeometry());
+                setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+
+                if (_loadingScreen)
+                    show();
+            }
+            else
+            {
+                hide();
+                setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
+
+                if (_loadingScreen)
+                    show();
+            }
+        });
+
+    _settingsController.Load();
 }
 
 MainScreen::~MainScreen()
@@ -81,6 +104,13 @@ void MainScreen::closeEvent(QCloseEvent *event)
     ScreenController::Get().CleanAll();
 }
 
+void MainScreen::OnLoadingFinished()
+{
+    show();
+    _loadingScreen->hide();
+    ScreenController::Get().ShowScreen(ScreenState::Game);
+}
+
 void MainScreen::on_pushButton_clicked()
 {
     ScreenController::Get().ShowWarningDialog("Dominik je boss");
@@ -94,8 +124,4 @@ void MainScreen::on_pushButton_2_clicked()
     //setWindowFlags(Qt::FramelessWindowHint);
     //show();
     //setGeometry(g);
-}
-
-void MainScreen::LoadData()
-{
 }

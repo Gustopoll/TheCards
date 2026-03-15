@@ -18,16 +18,16 @@ class DataPreloader
 
     using ImageLoadedEvent = EventHandler<
         //! Name of the group that image is loaded from.
-        std::string,
+        const std::string&,
         //! Path of the loaded image.
-        std::string,
+        const std::string&,
         //! True when the image is succesfully loaded otherwise false.
         bool>;
 
     using ImageLoadingFinishedEvent = EventHandler<
         //! Name of the group that all the images is loaded from.
         //! Empty string when all the images are loaded.
-        std::string>;
+        const std::string&>;
 
 public:
     DataPreloader();

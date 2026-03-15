@@ -2,7 +2,8 @@
 #define SETTINGSSCREEN_H
 
 #include "src/Screens/screencontroller.h"
-#include "src/Settings/Settings.h"
+#include "src/Settings/settingscontroller.h"
+
 #include <QWidget>
 
 namespace Ui {
@@ -14,11 +15,12 @@ class SettingsScreen : public ScreenWidget
     Q_OBJECT
 
 public:
-    SettingsScreen(std::vector<Settings>& settings, QWidget *parent = nullptr);
+    SettingsScreen(SettingsController& settings, QWidget *parent = nullptr);
     ~SettingsScreen();
 
     void OnScreenActive() override;
     void OnScreenInactive() override;
+
 private slots:
     void on_pushButton_clicked();
 
@@ -29,9 +31,10 @@ private slots:
 private:
     Ui::SettingsScreen *ui;
 
-    std::vector<Settings>& _settings;
+    SettingsController& _settings;
 
     QWidget* _parent = nullptr;
+
 };
 
 #endif // SETTINGSSCREEN_H

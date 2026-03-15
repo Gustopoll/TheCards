@@ -1,4 +1,4 @@
-#include "Settings.h"
+#include "settingswriter.h"
 
 namespace
 {
@@ -7,7 +7,7 @@ constexpr char kDeliminer = '/';
 
 }
 
-Settings::Settings(const std::string& name)
+SettingsWriter::SettingsWriter(const std::string& name)
 {
     const auto splittedName = Tokenize(name, kDeliminer);
 
@@ -15,7 +15,7 @@ Settings::Settings(const std::string& name)
     _name = name + ".xml";
 }
 
-void Settings::SetSetting(const std::string& path, const std::string& value)
+void SettingsWriter::SetSetting(const std::string& path, const std::string& value)
 {
     const auto tokens = Tokenize(path, kDeliminer);
 
@@ -41,17 +41,17 @@ void Settings::SetSetting(const std::string& path, const std::string& value)
     _doc.save_file(_name.c_str());
 }
 
-void Settings::SetSettingDefault(const std::string& path, const std::string& defaultValue)
+void SettingsWriter::SetSettingDefault(const std::string& path, const std::string& defaultValue)
 {
     _defaultStringValues[path] = defaultValue;
 }
 
-const std::string& Settings::GetSetting(const std::string& path)
+const std::string& SettingsWriter::GetSetting(const std::string& path)
 {
     return _storedStringValues[path];
 }
 
-void Settings::ReadSettings()
+void SettingsWriter::ReadSettings()
 {
     struct Walker : pugi::xml_tree_walker
     {
@@ -70,24 +70,23 @@ void Settings::ReadSettings()
             return true;
         }
 
-        SettingsStringValues stringValues;;
-
+        SettingsStringValues stringValues;
     };
 
     pugi::xml_document doc;
     doc.load_file(_name.c_str());
-    
+
     Walker w;
     w.stringValues = _defaultStringValues;
     doc.traverse(w);
 
     _storedStringValues = w.stringValues;
-    
+
     for (const auto& item : _storedStringValues)
         SetSetting(item.first, item.second);
 }
 
-std::vector<std::string> Settings::Tokenize(const std::string& input, const char delimiter)
+std::vector<std::string> SettingsWriter::Tokenize(const std::string& input, const char delimiter)
 {
     std::vector<std::string> tokens;
     std::string temporary = input;
