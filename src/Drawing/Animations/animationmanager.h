@@ -33,7 +33,7 @@ private:
     //! @param animationIndex Index of animation.
     //! @return Animation or nullptr when given animation does not exist.
     std::optional<std::shared_ptr<IAnimation>> GetAnimation(
-            std::shared_ptr<DrawingEntity> drawingEntity,
+        std::shared_ptr<DrawingEntity> drawingEntity,
         AnimationType animationIndex);
 
     //! Calls when animation ends.

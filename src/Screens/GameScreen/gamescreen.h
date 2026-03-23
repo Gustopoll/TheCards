@@ -3,6 +3,8 @@
 
 #include "src/Screens/screencontroller.h"
 #include "src/GameLogic/game.h"
+#include "src/Utils/datapreloader.h"
+#include "src/GameLogic/playercontroller.h"
 
 #include <QWidget>
 
@@ -15,7 +17,9 @@ class GameScreen : public ScreenWidget
     Q_OBJECT
 
 public:
-    explicit GameScreen(QWidget *parent = nullptr);
+    GameScreen(
+        DataPreloader& dataPreloader,
+        QWidget *parent = nullptr);
     ~GameScreen();
 
     void OnScreenActive() override;
@@ -29,7 +33,10 @@ private:
 
     std::optional<Game> _game;
 
+    DataPreloader& _dataPreloader;
     QWidget* _parent;
+
+    std::optional<PlayerController> _playerController;
 };
 
 #endif // GAMESCREEN_H

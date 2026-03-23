@@ -24,6 +24,7 @@ SOURCES += \
     src/Drawing/Entities/drawinggroup.cpp \
     src/Drawing/Widgets/drawingwidget.cpp \
     src/GameLogic/game.cpp \
+    src/GameLogic/playercontroller.cpp \
     src/Screens/Dialogs/infodialog.cpp \
     src/Screens/GameScreen/gamescreen.cpp \
     src/Screens/Loadings/loadingscreen.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     src/Drawing/Entities/drawinggroup.h \
     src/Drawing/Widgets/drawingwidget.h \
     src/GameLogic/game.h \
+    src/GameLogic/playercontroller.h \
     src/Screens/Dialogs/infodialog.h \
     src/Screens/GameScreen/gamescreen.h \
     src/Screens/Loadings/loadingscreen.h \

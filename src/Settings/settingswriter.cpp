@@ -39,6 +39,7 @@ void SettingsWriter::SetSetting(const std::string& path, const std::string& valu
     }
     node.text().set(value.c_str());
     _doc.save_file(_name.c_str());
+    _storedStringValues[path] = value;
 }
 
 void SettingsWriter::SetSettingDefault(const std::string& path, const std::string& defaultValue)

@@ -17,14 +17,14 @@ void DrawingWidget::Initialize(uint32_t maxSizeX, uint32_t maxSizeY)
     _isInitialized = true;
 }
 
-uint32_t DrawingWidget::CreateEntity(std::shared_ptr<QImage> image, float x, float y)
+std::shared_ptr<DrawingEntity> DrawingWidget::CreateEntity(std::shared_ptr<QImage> image, float x, float y)
 {
    const auto entity = std::make_shared<DrawingEntity>(image, x, y);
 
    const auto id = entity->GetId();
    _entities[id] = entity;
 
-   return id;
+   return entity;
 }
 
 const std::shared_ptr<DrawingEntity> DrawingWidget::GetEntity(uint32_t id)
@@ -157,7 +157,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent *event)
     {
         for (const auto& group : clickedEntity->GetGroups())
         {
-            group->TriggerEvent(DrawingEvents::EntityPressed, clickedEntity);
+            //group->TriggerEvent(DrawingEvents::EntityPressed, clickedEntity);
         }
 
         const auto [clickedBlockX, clickedBlockY] = ConvertPixelsToBlock(event->pos().x(), event->pos().y());
@@ -184,7 +184,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent *event)
     {
         for (const auto& group : clickedData.entity->GetGroups())
         {
-            group->TriggerEvent(DrawingEvents::EntityReleased, clickedData.entity);
+            //group->TriggerEvent(DrawingEvents::EntityReleased, clickedData.entity);
         }
     }
 

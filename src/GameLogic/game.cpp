@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-Game::Game()
+Game::Game(int numberOfPlayers)
 {
 
 }

@@ -53,7 +53,7 @@ MainScreen::MainScreen(QWidget *parent)
     _dataPreloader.PreloadImages("CardGroup", cardPaths);
 
     ScreenController::Get().Initialize(this, ui->stackedWidget);
-    ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(this));
+    ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(_dataPreloader, this));
     ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_settingsController, this));
 
     _settingsController.GetSettingChangedEvent().Subscribe(
@@ -62,13 +62,13 @@ MainScreen::MainScreen(QWidget *parent)
             if (path != Settings::GeneralFullscreen)
                 return;
 
-            qDebug() << "setting is changed";
             if (value == "true")
             {
+                // TODO add new setting to select available screen e.g. qDebug() << QGuiApplication::screens();
                 hide();
                 const auto* screen = QGuiApplication::primaryScreen();
                 setGeometry(screen->virtualGeometry());
-                setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+                setWindowFlags(Qt::FramelessWindowHint /*| Qt::WindowStaysOnTopHint*/);
 
                 if (_loadingScreen)
                     show();
@@ -76,14 +76,12 @@ MainScreen::MainScreen(QWidget *parent)
             else
             {
                 hide();
-                setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
+                setWindowFlags(Qt::Window /*| Qt::WindowStaysOnTopHint*/);
 
                 if (_loadingScreen)
                     show();
             }
         });
-
-    _settingsController.Load();
 }
 
 MainScreen::~MainScreen()
@@ -108,6 +106,7 @@ void MainScreen::OnLoadingFinished()
 {
     show();
     _loadingScreen->hide();
+    _settingsController.Load();
     ScreenController::Get().ShowScreen(ScreenState::Game);
 }
 

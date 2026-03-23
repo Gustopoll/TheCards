@@ -42,8 +42,8 @@ public:
     //! @param image Image of the entity with default properties and size.
     //! @param x X position of entity in range [0, maxSizeX].
     //! @param y Y position of entity in range [0, maxSizeY].
-    //! @return Id of created entity.
-    uint32_t CreateEntity(std::shared_ptr<QImage> image, float x, float y);
+    //! @return Pointer of the created entity.
+    std::shared_ptr<DrawingEntity> CreateEntity(std::shared_ptr<QImage> image, float x, float y);
 
     const std::shared_ptr<DrawingEntity> GetEntity(uint32_t id);
 
@@ -72,6 +72,8 @@ public:
 
     //! Shows gird inside drawing area.
     void ShowGrid(bool enable);
+
+    std::pair<uint32_t, uint32_t> GetBlockCount() { return std::make_pair(_maxSizeX, _maxSizeY); }
 protected:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

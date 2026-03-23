@@ -2,6 +2,7 @@
 #define DRAWINGGROUP_H
 
 #include "src/Drawing/Entities/drawingentity.h"
+#include "src/Utils/eventhandler.h"
 
 enum class DrawingEvents
 {
@@ -9,11 +10,12 @@ enum class DrawingEvents
     EntityReleased
 };
 
-using OnEntityEvent = std::function<void(std::shared_ptr<DrawingEntity>)>;
-
 class DrawingGroup : public std::enable_shared_from_this<DrawingGroup>
 {
 public:
+    using EntityPressedEvent = EventHandler<std::shared_ptr<DrawingEntity>>;
+    using EntityReleasedEvent = EventHandler<std::shared_ptr<DrawingEntity>>;
+
     DrawingGroup(const std::string& groupName);
 
     //! Gets the name of the group.
@@ -28,34 +30,41 @@ public:
     //! Removes an entity from the group.
     void RemoveEntity(const std::shared_ptr<DrawingEntity>& entity);
 
-    //! Subscribes a callback to a specific event.
-    void SubscribeOnEvent(DrawingEvents event, const OnEntityEvent& callback);
-
-    //! Triggers all callbacks associated with a specific event.
-    //! @param event The type of event to trigger.
-    //! @param entity The entity associated with the event.
-    void TriggerEvent(DrawingEvents event, const std::shared_ptr<DrawingEntity>& entity);
-
     //! Sets whether the group is movable.
     //! When enabled, entities in the group can be moved via drag-and-drop actions.
     //! @param enable True to enable movability, false to disable.
-    void SetMovable(bool enable) { _movable = enable;}
+    void SetMovable(bool enable) { _movable = enable; }
+
+    //! Sets whether the group is clickable.
+    void SetClickable(bool enable) { _clickable = enable; }
 
     //! Checks whether the group is movable.
     bool IsMovable() const noexcept { return _movable;}
 
     //! Checks whether the group is clickable.
-    bool IsClickable() const noexcept { return !_entityPressed.empty() || !_entityReleased.empty();}
+    bool IsClickable() const noexcept { return _clickable;}
+
+    EntityPressedEvent::Subscriber& GetEntityPressedEvent()
+    {
+        return _entityPressedEvent.GetSubscriber();
+    }
+
+    EntityReleasedEvent::Subscriber& GetEntityReleasedEvent()
+    {
+        return _entityReleasedEvent.GetSubscriber();
+    }
+
 private:
     std::string _groupName;
     bool _movable = false;
+    bool _clickable = false;
 
     //! Entities in this group.
     std::vector<std::shared_ptr<DrawingEntity>> _entities;
 
-    //! Vectors of callbacks.
-    std::vector<OnEntityEvent> _entityPressed;
-    std::vector<OnEntityEvent> _entityReleased;
+    EntityPressedEvent _entityPressedEvent;
+    EntityReleasedEvent _entityReleasedEvent;
+
 };
 
 #endif // DRAWINGGROUP_H

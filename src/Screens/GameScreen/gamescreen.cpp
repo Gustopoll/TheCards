@@ -3,12 +3,20 @@
 
 #include <QDebug>
 
-GameScreen::GameScreen(QWidget *parent) :
-    ScreenWidget(parent),
-    ui(new Ui::GameScreen)
+GameScreen::GameScreen(
+    DataPreloader& dataPreloader,
+    QWidget *parent)
+    : ScreenWidget(parent)
+    , ui(new Ui::GameScreen)
+    , _dataPreloader(dataPreloader)
+    , _parent(parent)
 {
     ui->setupUi(this);
-    _parent = parent;
+
+    ui->drawingWidget->Initialize(16, 9);
+    ui->drawingWidget->ShowGrid(true);
+
+    _playerController.emplace(ui->drawingWidget, _dataPreloader);
 }
 
 GameScreen::~GameScreen()
@@ -18,18 +26,11 @@ GameScreen::~GameScreen()
 
 void GameScreen::OnScreenActive()
 {
-    qDebug() << "game are active";
-    if (!_game)
-    {
-        qDebug() << "init game started";
-        _game.emplace();
-        qDebug() << "inint game ended";
-    }
+    _playerController->ShowCards();
 }
 
 void GameScreen::OnScreenInactive()
 {
-    qDebug() << "game are no longer active";
 }
 
 void GameScreen::on_pushButton_clicked()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>559</width>
+    <height>370</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,17 +16,28 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QPushButton" name="pushButton">
        <property name="text">
         <string>GameScreen</string>
        </property>
       </widget>
      </item>
+     <item row="0" column="0">
+      <widget class="DrawingWidget" name="drawingWidget" native="true"/>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DrawingWidget</class>
+   <extends>QWidget</extends>
+   <header>drawingwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

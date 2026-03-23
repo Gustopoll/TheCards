@@ -40,29 +40,3 @@ void DrawingGroup::RemoveEntity(const std::shared_ptr<DrawingEntity> &entity)
         entity->_groups.end(),
         [this](auto g){return g.get() == this;});
 }
-
-void DrawingGroup::SubscribeOnEvent(DrawingEvents event, const OnEntityEvent &callback)
-{
-    switch (event) {
-        case DrawingEvents::EntityPressed:
-            _entityPressed.emplace_back(callback);
-        break;
-        case DrawingEvents::EntityReleased:
-            _entityReleased.emplace_back(callback);
-        break;
-    }
-}
-
-void DrawingGroup::TriggerEvent(DrawingEvents event, const std::shared_ptr<DrawingEntity> &entity)
-{
-    switch (event) {
-        case DrawingEvents::EntityPressed:
-            for (const auto& fire : _entityPressed)
-                fire(entity);
-        break;
-        case DrawingEvents::EntityReleased:
-            for (const auto& fire : _entityReleased)
-                fire(entity);
-        break;
-    }
-}

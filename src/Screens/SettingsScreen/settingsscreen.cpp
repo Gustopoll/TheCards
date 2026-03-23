@@ -41,7 +41,7 @@ void SettingsScreen::on_serverPort_textChanged()
 
 void SettingsScreen::on_checkBoxFullscreen_checkStateChanged(const Qt::CheckState &arg1)
 {
-    qDebug() << "checkbox clicked";
+    qDebug() << "checkbox clicked" << arg1;
     if (arg1 == Qt::CheckState::Checked)
     {
         qDebug() << "on";

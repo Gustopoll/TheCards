@@ -1,8 +1,8 @@
 #ifndef IANIMATION_H
 #define IANIMATION_H
 
+#include <cstdint>
 #include <functional>
-#include <memory>
 
 enum class AnimationType
 {

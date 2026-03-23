@@ -4,7 +4,9 @@
 class Game
 {
 public:
-    Game();
+    Game(int numberOfPlayers);
+
+private:
 };
 
 #endif // GAME_H
