@@ -2,12 +2,12 @@
 #define DRAWINGWIDGET_H
 
 #include "src/Drawing/Entities/drawingentity.h"
-#include "src/Drawing/Entities/drawinggroup.h"
+#include "src/Utils/eventhandler.h"
+
 #include <QWidget>
 #include <QMouseEvent>
-#include <map>
 
-class AnimationManager;
+#include <map>
 
 struct ClickedData
 {
@@ -25,6 +25,9 @@ class DrawingWidget : public QWidget
 {
     Q_OBJECT
 public:
+    using EntityPressedEvent = EventHandler<std::shared_ptr<DrawingEntity>>;
+    using EntityReleasedEvent = EventHandler<std::shared_ptr<DrawingEntity>>;
+
     DrawingWidget(QWidget *parent = nullptr);
 
     //! Initialize the screen for drawing entities.
@@ -42,10 +45,20 @@ public:
     //! @param image Image of the entity with default properties and size.
     //! @param x X position of entity in range [0, maxSizeX].
     //! @param y Y position of entity in range [0, maxSizeY].
-    //! @return Pointer of the created entity.
-    std::shared_ptr<DrawingEntity> CreateEntity(std::shared_ptr<QImage> image, float x, float y);
+    //! @param sizeX X size of entity.
+    //! @param sizeY Y size of entity.
+    //! @return Id of the created entity.
+    uint32_t CreateEntity(
+        std::shared_ptr<QImage> image,
+        float x,
+        float y,
+        float sizeX,
+        float sizeY);
 
     const std::shared_ptr<DrawingEntity> GetEntity(uint32_t id);
+
+    void SetEntityAsMovable(uint32_t id);
+    void SetEntityAsClickable(uint32_t id);
 
     //! Moves entity to position.
     //!
@@ -54,26 +67,22 @@ public:
     //! @param y Y position of entity in range [0, maxSizeY].
     void MoveEntityTo(uint32_t id, float x, float y);
 
-    //! Adds the entity into group.
-    //!
-    //! @param Id of entity.
-    //! @param groupName Name of the group.
-    std::shared_ptr<DrawingGroup> AddEntityToGroup(uint32_t id, const std::string& groupName);
-
-    //! Removes the entity from group
-    //!
-    //! @param Id of entity.
-    //! @param groupName Name of the group.
-    void RemoveEntityFromGroup(int32_t id, const std::string& groupName);
-
-    const std::map<std::string, std::shared_ptr<DrawingGroup>>& GetAllGroups() { return _groups;}
-
-    std::shared_ptr<AnimationManager> GetAnimationManager() { return _animationManager;}
-
     //! Shows gird inside drawing area.
     void ShowGrid(bool enable);
 
+    //! Gets the X and Y position of initialized max block size.
     std::pair<uint32_t, uint32_t> GetBlockCount() { return std::make_pair(_maxSizeX, _maxSizeY); }
+
+    EntityPressedEvent::Subscriber& GetEntityPressedEvent()
+    {
+        return _entityPressedEvent.GetSubscriber();
+    }
+
+    EntityReleasedEvent::Subscriber& GetEntityReleasedEvent()
+    {
+        return _entityReleasedEvent.GetSubscriber();
+    }
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -88,16 +97,16 @@ private:
     //! @param x X position.
     //! @param y Y position.
     //! @return Entity.
-    std::shared_ptr<DrawingEntity> GetEntityByPosition(uint32_t x, uint32_t y);
+    std::shared_ptr<DrawingEntity> GetEntityByPosition(const QPoint& position);
 
     //! True when given position is inside the entity, otherwise false.
-    bool IsPositionInsideEntity(const std::shared_ptr<DrawingEntity>& entity, uint32_t x, uint32_t y);
+    bool IsPositionInsideEntity(const std::shared_ptr<DrawingEntity>& entity, const QPoint& position);
 
     //! Converts position (in block coordinates) to pixel coordinates.
-    std::pair<uint32_t, uint32_t> ConvertBlockToPixels(float x, float y);
+    QPoint ConvertBlockToPixels(float x, float y);
 
     //! Converts position (in pixel coordinates) to block coordinates.
-    std::pair<float, float> ConvertPixelsToBlock(uint32_t x, uint32_t y);
+    std::pair<float, float> ConvertPixelsToBlock(const QPoint& position);
 
     bool _isInitialized = false;
 
@@ -119,13 +128,17 @@ private:
     //! Holds data for clicked entities.
     std::map<Qt::MouseButton, ClickedData> _clickedEntities;
 
+    //! Map of all movable entities <id, object>..
+    std::map<uint32_t, std::shared_ptr<DrawingEntity>> _movableEntities;
+
+    //! Map of all clickable entities <id, object>.
+    std::map<uint32_t, std::shared_ptr<DrawingEntity>> _clickableEntities;
+
     //! Map of all entities <id, object>.
     std::map<uint32_t, std::shared_ptr<DrawingEntity>> _entities;
 
-    //! Map of all groups of entities <name of the group, group>.
-    std::map<std::string, std::shared_ptr<DrawingGroup>> _groups;
-
-    std::shared_ptr<AnimationManager> _animationManager;
+    EntityPressedEvent _entityPressedEvent;
+    EntityReleasedEvent _entityReleasedEvent;
 };
 
 #endif // DRAWINGWIDGET_H

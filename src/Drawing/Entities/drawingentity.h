@@ -8,7 +8,13 @@ class DrawingGroup;
 class DrawingEntity
 {
 public:
-    DrawingEntity(std::shared_ptr<QImage> image, float x, float y);
+    DrawingEntity(
+        std::shared_ptr<QImage> image,
+        float x,
+        float y,
+        float sizeX,
+        float sizeY);
+
     ~DrawingEntity() = default;
 
     //! Gets the image.

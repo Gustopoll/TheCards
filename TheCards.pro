@@ -21,7 +21,6 @@ SOURCES += \
     src/Drawing/Animations/animationrotate.cpp \
     src/Drawing/Animations/animationscale.cpp \
     src/Drawing/Entities/drawingentity.cpp \
-    src/Drawing/Entities/drawinggroup.cpp \
     src/Drawing/Widgets/drawingwidget.cpp \
     src/GameLogic/game.cpp \
     src/GameLogic/playercontroller.cpp \
@@ -47,7 +46,6 @@ HEADERS += \
     src/Drawing/Animations/animationscale.h \
     src/Drawing/Constants.h \
     src/Drawing/Entities/drawingentity.h \
-    src/Drawing/Entities/drawinggroup.h \
     src/Drawing/Widgets/drawingwidget.h \
     src/GameLogic/game.h \
     src/GameLogic/playercontroller.h \
