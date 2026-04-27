@@ -21,6 +21,20 @@ struct ClickedData
     std::shared_ptr<DrawingEntity> entity;
 };
 
+struct DrawingTextEntity
+{
+    //! Text to draw.
+    QString text;
+    //! X position of text in range [0, maxSizeX]
+    float x;
+    //! Y position of text in range [0, maxSizeY].
+    float y;
+    //! Size of text.
+    float pixelSize;
+    //! Color of text.
+    QColor color;
+};
+
 class DrawingWidget : public QWidget
 {
     Q_OBJECT
@@ -54,6 +68,19 @@ public:
         float y,
         float sizeX,
         float sizeY);
+
+    //! Shows the text.
+    //!
+    //! @param text Text to show.
+    //! @param x X position of text in range [0, maxSizeX].
+    //! @param y Y position of text in range [0, maxSizeY].
+    //! @param sizeX Pixel size of text.
+    void ShowText(
+        const QString& text,
+        float x,
+        float y,
+        float pixelSize,
+        QColor color);
 
     const std::shared_ptr<DrawingEntity> GetEntity(uint32_t id);
 
@@ -136,6 +163,7 @@ private:
 
     //! Map of all entities <id, object>.
     std::map<uint32_t, std::shared_ptr<DrawingEntity>> _entities;
+    std::vector<DrawingTextEntity> _textEntities;
 
     EntityPressedEvent _entityPressedEvent;
     EntityReleasedEvent _entityReleasedEvent;

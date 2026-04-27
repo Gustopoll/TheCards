@@ -30,6 +30,16 @@ uint32_t DrawingWidget::CreateEntity(
    return id;
 }
 
+void DrawingWidget::ShowText(
+    const QString& text,
+    const float x,
+    const float y,
+    const float pixelSize,
+    const QColor color)
+{
+    _textEntities.emplace_back(text, x, y, pixelSize, color);
+}
+
 const std::shared_ptr<DrawingEntity> DrawingWidget::GetEntity(uint32_t id)
 {
     auto e = _entities.find(id);
@@ -120,6 +130,19 @@ void DrawingWidget::paintEvent(QPaintEvent *event)
 
             painter.setPen(defaultPen);
         }
+    }
+
+    for (const auto& item : _textEntities)
+    {
+        const auto [x, y] = ConvertBlockToPixels(item.x, item.y);
+
+        QFont font = painter.font();
+        font.setPixelSize(item.pixelSize * _currentSizeX);
+        painter.setFont(font);
+
+        QPen pen(item.color);
+        painter.setPen(pen);
+        painter.drawText(x, y, item.text);
     }
 }
 

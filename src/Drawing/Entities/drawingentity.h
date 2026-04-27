@@ -3,8 +3,6 @@
 
 #include <QImage>
 
-class DrawingGroup;
-
 class DrawingEntity
 {
 public:
@@ -62,8 +60,6 @@ public:
     const QColor& GetHighlightColor() { return _highlightColor;}
     bool IsHighlighted() { return _highlight;}
 
-    //! Gets all groups where entity belongs to.
-    const std::vector<std::shared_ptr<DrawingGroup>>& GetGroups() { return _groups;}
 private:
     //! True if entity has highlighted borders.
     bool _highlight = false;
@@ -88,11 +84,6 @@ private:
 
     //! Unique entity ID.
     uint32_t _id = 0;
-
-    //! All groups where entity belongs to.
-    std::vector<std::shared_ptr<DrawingGroup>> _groups;
-
-    friend DrawingGroup;
 };
 
 #endif // DRAWINGENTITY_H

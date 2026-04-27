@@ -22,6 +22,8 @@ SOURCES += \
     src/Drawing/Animations/animationscale.cpp \
     src/Drawing/Entities/drawingentity.cpp \
     src/Drawing/Widgets/drawingwidget.cpp \
+    src/GameLogic/buttoncontroller.cpp \
+    src/GameLogic/enemycontroller.cpp \
     src/GameLogic/game.cpp \
     src/GameLogic/playercontroller.cpp \
     src/Screens/Dialogs/infodialog.cpp \
@@ -47,6 +49,8 @@ HEADERS += \
     src/Drawing/Constants.h \
     src/Drawing/Entities/drawingentity.h \
     src/Drawing/Widgets/drawingwidget.h \
+    src/GameLogic/buttoncontroller.h \
+    src/GameLogic/enemycontroller.h \
     src/GameLogic/game.h \
     src/GameLogic/playercontroller.h \
     src/Screens/Dialogs/infodialog.h \
@@ -58,6 +62,7 @@ HEADERS += \
     src/Screens/stylesheetcontroller.h \
     src/Settings/settingscontroller.h \
     src/Settings/settingswriter.h \
+    src/Utils/assets.h \
     src/Utils/datapreloader.h \
     src/Utils/eventhandler.h
 

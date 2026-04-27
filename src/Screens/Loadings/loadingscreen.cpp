@@ -1,15 +1,10 @@
 #include "loadingscreen.h"
 #include "ui_loadingscreen.h"
 
+#include "src/Utils/assets.h"
 #include "src/Screens/MainScreen/mainscreen.h"
 
 #include <QtConcurrent>
-
-namespace
-{
-
-constexpr char kCardGroup[] = "CardGroup";
-}
 
 LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
     : QMainWindow(reinterpret_cast<QMainWindow*>(parent))
@@ -21,7 +16,7 @@ LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
 
     watcher = new QFutureWatcher<void>();
     _countPreloadedData = 0;
-    _countDataToPreload = _dataPreloader.GetPreloadedImagesCount(kCardGroup);
+    _countDataToPreload = _dataPreloader.GetPreloadedImagesCount();
     ui->progressBar->setValue(_countPreloadedData);
     ui->progressBar->setMaximum(_countDataToPreload);
 
@@ -58,7 +53,7 @@ LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
     watcher->setFuture(QtConcurrent::run(
         [this]()
         {
-            _dataPreloader.LoadImageGroup(kCardGroup);
+            _dataPreloader.LoadAll();
         }));
 }
 

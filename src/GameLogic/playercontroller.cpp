@@ -1,5 +1,7 @@
 #include "playercontroller.h"
 
+#include "src/Utils/assets.h"
+
 #include <span>
 
 PlayerController::PlayerController(
@@ -12,7 +14,7 @@ PlayerController::PlayerController(
 
 void PlayerController::ShowCards()
 {
-    const auto cardImages = _dataPreloader.GetPreloadedImages("CardGroup");
+    const auto cardImages = _dataPreloader.GetPreloadedImages(Assets::kCardsGroup);
     if (cardImages.empty())
         return;
 

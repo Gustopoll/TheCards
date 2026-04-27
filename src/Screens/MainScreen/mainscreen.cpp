@@ -1,6 +1,7 @@
 #include "mainscreen.h"
 #include "ui_mainscreen.h"
 
+#include "src/Utils/assets.h"
 #include "src/Screens/screencontroller.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 #include "src/Screens/GameScreen/gamescreen.h"
@@ -17,40 +18,49 @@ MainScreen::MainScreen(QWidget *parent)
 
     std::vector<std::string> cardPaths
     {
-        "Data/Cards/A-0A.png",
-        "Data/Cards/A-07.png",
-        "Data/Cards/A-08.png",
-        "Data/Cards/A-09.png",
-        "Data/Cards/A-10.png",
-        "Data/Cards/A-J1.png",
-        "Data/Cards/A-J2.png",
-        "Data/Cards/A-KI.png",
-        "Data/Cards/B-0A.png",
-        "Data/Cards/B-07.png",
-        "Data/Cards/B-08.png",
-        "Data/Cards/B-09.png",
-        "Data/Cards/B-10.png",
-        "Data/Cards/B-J1.png",
-        "Data/Cards/B-J2.png",
-        "Data/Cards/B-KI.png",
-        "Data/Cards/H-0A.png",
-        "Data/Cards/H-07.png",
-        "Data/Cards/H-08.png",
-        "Data/Cards/H-09.png",
-        "Data/Cards/H-10.png",
-        "Data/Cards/H-J1.png",
-        "Data/Cards/H-J2.png",
-        "Data/Cards/H-KI.png",
-        "Data/Cards/L-0A.png",
-        "Data/Cards/L-07.png",
-        "Data/Cards/L-08.png",
-        "Data/Cards/L-09.png",
-        "Data/Cards/L-10.png",
-        "Data/Cards/L-J1.png",
-        "Data/Cards/L-J2.png",
-        "Data/Cards/L-KI.png"
+        Assets::kCardA0APath,
+        Assets::kCardA07Path,
+        Assets::kCardA08Path,
+        Assets::kCardA09Path,
+        Assets::kCardA10Path,
+        Assets::kCardAJ1Path,
+        Assets::kCardAJ2Path,
+        Assets::kCardAKIPath,
+        Assets::kCardB0APath,
+        Assets::kCardB07Path,
+        Assets::kCardB08Path,
+        Assets::kCardB09Path,
+        Assets::kCardB10Path,
+        Assets::kCardBJ1Path,
+        Assets::kCardBJ2Path,
+        Assets::kCardBKIPath,
+        Assets::kCardH0APath,
+        Assets::kCardH07Path,
+        Assets::kCardH08Path,
+        Assets::kCardH09Path,
+        Assets::kCardH10Path,
+        Assets::kCardHJ1Path,
+        Assets::kCardHJ2Path,
+        Assets::kCardHKIPath,
+        Assets::kCardL0APath,
+        Assets::kCardL07Path,
+        Assets::kCardL08Path,
+        Assets::kCardL09Path,
+        Assets::kCardL10Path,
+        Assets::kCardLJ1Path,
+        Assets::kCardLJ2Path,
+        Assets::kCardLKIPath
     };
-    _dataPreloader.PreloadImages("CardGroup", cardPaths);
+    _dataPreloader.PreloadImages(Assets::kCardsGroup, cardPaths);
+
+    std::vector<std::string> boardButtonsPaths
+    {
+        Assets::kButtonEndTurnPath,
+        Assets::kButtonNoCardsPath,
+        Assets::kButtonBackCardPath
+    };
+    _dataPreloader.PreloadImages(Assets::kBoardButtonsGroup, boardButtonsPaths);
+
 
     ScreenController::Get().Initialize(this, ui->stackedWidget);
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(_dataPreloader, this));

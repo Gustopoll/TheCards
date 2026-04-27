@@ -47,7 +47,7 @@ public:
     std::vector<std::shared_ptr<QImage>> GetPreloadedImages(const std::string& groupName);
 
     //! Gets the size of the images to preload.
-    size_t GetPreloadedImagesCount(const std::string& groupName);
+    size_t GetPreloadedImagesCount();
 
     ImageLoadedEvent::Subscriber& GetImageLoadedEvent()
     {

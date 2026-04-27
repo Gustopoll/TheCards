@@ -69,13 +69,13 @@ std::vector<std::shared_ptr<QImage>> DataPreloader::GetPreloadedImages(const std
     return {};
 }
 
-size_t DataPreloader::GetPreloadedImagesCount(const std::string& groupName)
+size_t DataPreloader::GetPreloadedImagesCount()
 {
-    if (const auto& images = _preloadedImages.find(groupName);
-        images != _preloadedImages.end())
+    size_t totalCount = 0;
+    for (const auto& item : _preloadedImages)
     {
-        return images->second.paths.size();
+        totalCount += item.second.paths.size();
     }
 
-    return 0;
+    return totalCount;
 }
