@@ -36,6 +36,18 @@ void EnemyController::ShowEnemy(
     const Enemy& enemy,
     const std::shared_ptr<QImage>& backCardImage)
 {
+    const float slotWidth = 4;
+    const auto backgrounds = _dataPreloader.GetPreloadedImages(Assets::kBackgroundsGroup);
+    if (!backgrounds.empty())
+    {
+        float posX = slot.reverseDirection
+            ? slot.x - slotWidth
+            : slot.x - 0.6;
+        float posY = slot.y - 0.75;
+
+        _drawingWidget->CreateEntity(backgrounds[0], posX, posY, 5, 2);
+    }
+
     float cardWidth = 0.5f;
     float cardHeight = 0.75f;
     float spacing = 0.25f;
@@ -63,7 +75,11 @@ void EnemyController::ShowEnemy(
             cardHeight);
     }
 
-    _drawingWidget->ShowText(enemy.name, slot.x, slot.y - 0.3, 0.25, Qt::blue);
+    float textPosX = slot.reverseDirection
+        ? slot.x - slotWidth + 0.3
+        : slot.x;
+
+    _drawingWidget->ShowText(enemy.name, textPosX, slot.y - 0.3, 0.25, Qt::blue);
 }
 
 void EnemyController::SubscribeToEvents()

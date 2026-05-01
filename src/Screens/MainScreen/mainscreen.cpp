@@ -61,6 +61,11 @@ MainScreen::MainScreen(QWidget *parent)
     };
     _dataPreloader.PreloadImages(Assets::kBoardButtonsGroup, boardButtonsPaths);
 
+    std::vector<std::string> backgroundsPaths
+        {
+            Assets::kEnemyBackgroundPath,
+        };
+    _dataPreloader.PreloadImages(Assets::kBackgroundsGroup, backgroundsPaths);
 
     ScreenController::Get().Initialize(this, ui->stackedWidget);
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(_dataPreloader, this));

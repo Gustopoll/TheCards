@@ -10,6 +10,10 @@ constexpr auto kButtonEndTurnPath = "Data/Buttons/button_end_turn.png";
 constexpr auto kButtonNoCardsPath = "Data/Buttons/no_cards.png";
 constexpr auto kButtonBackCardPath = "Data/Buttons/back_card.png";
 
+constexpr auto kBackgroundsGroup = "Backgrounds";
+
+constexpr auto kEnemyBackgroundPath = "Data/Backgrounds/enemy_background.jpg";
+
 constexpr auto kCardsGroup = "Cards";
 
 constexpr auto kCardA0APath = "Data/Cards/A-0A.png";

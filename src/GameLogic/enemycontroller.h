@@ -35,10 +35,10 @@ private:
 
     const std::array<Slot, 4> _slots =
     {{
-        {1, 3, false},
+        {1, 3.1, false},
+        {15, 3.1, true},
         {1, 1, false},
-        {15, 1, true},
-        {15, 3, true}
+        {15, 1, true}
     }};
 
     DrawingWidget* _drawingWidget;

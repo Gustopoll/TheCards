@@ -29,7 +29,7 @@ GameScreen::~GameScreen()
 void GameScreen::OnScreenActive()
 {
     _boardController->Show();
-    _enemyController->Show({ {"Player1", 3}, {"Player2", 5}, {"Player3", 22}, {"Player4", 16}});
+    _enemyController->Show({ {"Player1", 16}, {"Player2", 20}, {"Player3", 22}, {"Player4", 16}});
     _playerController->ShowCards();
 }
 

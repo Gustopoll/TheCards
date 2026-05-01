@@ -34,7 +34,7 @@
   <customwidget>
    <class>DrawingWidget</class>
    <extends>QWidget</extends>
-   <header>drawingwidget.h</header>
+   <header>src/Drawing/Widgets/drawingwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
