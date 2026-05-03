@@ -1,5 +1,7 @@
 #include "animationmanager.h"
-#include "src/Drawing/Widgets/drawingwidget.h"
+
+#include "src/Drawing/Animations/animationscale.h"
+#include "src/Drawing/Animations/animationrotate.h"
 
 AnimationManager::AnimationManager(DrawingWidget* drawingWidget) :
     _drawingWidget(drawingWidget)
@@ -16,8 +18,7 @@ AnimationManager::~AnimationManager()
 
 void AnimationManager::Start(
     std::shared_ptr<DrawingEntity> entity,
-    const AnimationType animationIndex,
-    OnAnimationFinished callback)
+    const AnimationType animationIndex)
 {
     if (const auto animationOpt = GetAnimation(entity, animationIndex))
     {
@@ -27,11 +28,10 @@ void AnimationManager::Start(
         animation->Start();
 
         animation->SetFinalFunction(
-            [this, callback, entity](IAnimation* item)
+            [this, entity](IAnimation* item)
             {
-                OnAnimationEnds(item);
-                if (callback)
-                    callback(entity);
+                RemoveActiveAnimation(item);
+                _onAnimationFinishEvent.Fire(entity);
             });
     }
 }
@@ -64,7 +64,7 @@ std::optional<std::shared_ptr<IAnimation>> AnimationManager::GetAnimation(
     return std::nullopt;
 }
 
-void AnimationManager::OnAnimationEnds(IAnimation *animation)
+void AnimationManager::RemoveActiveAnimation(IAnimation *animation)
 {
     _activeAnimations.erase(
         std::remove_if(

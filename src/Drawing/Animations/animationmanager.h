@@ -1,30 +1,36 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include "src/Drawing/Animations/animationscale.h"
-#include "src/Drawing/Animations/animationrotate.h"
-#include "src/Drawing/Constants.h"
-#include "src/Drawing/Entities/drawingentity.h"
+#include "src/Drawing/Animations/IAnimation.h"
+#include "src/Utils/eventhandler.h"
 
-#include <functional>
 #include <QDebug>
 #include <QObject>
 
+class AnimationScale;
+class AnimationRotate;
 class DrawingWidget;
-
-using OnAnimationFinished = std::function<void(std::shared_ptr<DrawingEntity>)>;
+class DrawingEntity;
 
 class AnimationManager
 {
-public:    
+public:
+    using OnAnimationFinishedEvent = EventHandler<
+        //! Entity that just finished animation process.
+        std::shared_ptr<DrawingEntity>>;
+
     AnimationManager(DrawingWidget* drawingWidget);
     ~AnimationManager();
 
     //! Perform the animation process.
     void Start(
         std::shared_ptr<DrawingEntity> entity,
-        AnimationType animationIndex,
-        OnAnimationFinished callback = nullptr);
+        AnimationType animationIndex);
+
+    OnAnimationFinishedEvent::Subscriber& GetOnAnimationFinishEvent()
+    {
+        return _onAnimationFinishEvent.GetSubscriber();
+    };
 
 private:
     //! Gets the animation based on index for given entity.
@@ -37,7 +43,9 @@ private:
         AnimationType animationIndex);
 
     //! Calls when animation ends.
-    void OnAnimationEnds(IAnimation* animation);
+    void RemoveActiveAnimation(IAnimation* animation);
+
+    OnAnimationFinishedEvent _onAnimationFinishEvent;
 
     DrawingWidget* _drawingWidget;
 
