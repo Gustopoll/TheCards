@@ -17,7 +17,7 @@ void EnemyController::Show(const std::vector<Enemy>& enemies)
     if (count <= 0)
         return;
 
-    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::kBoardButtonsGroup);
+    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::kButtonsGroup);
     if (buttonsImages.empty())
         return;
 

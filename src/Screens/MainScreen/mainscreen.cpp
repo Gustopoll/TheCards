@@ -59,7 +59,7 @@ MainScreen::MainScreen(QWidget *parent)
         Assets::kButtonNoCardsPath,
         Assets::kButtonBackCardPath
     };
-    _dataPreloader.PreloadImages(Assets::kBoardButtonsGroup, boardButtonsPaths);
+    _dataPreloader.PreloadImages(Assets::kButtonsGroup, boardButtonsPaths);
 
     std::vector<std::string> backgroundsPaths
         {

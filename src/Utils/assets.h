@@ -4,7 +4,7 @@
 namespace Assets
 {
 
-constexpr auto kBoardButtonsGroup = "BoardButtons";
+constexpr auto kButtonsGroup = "Buttons";
 
 constexpr auto kButtonEndTurnPath = "Data/Buttons/button_end_turn.png";
 constexpr auto kButtonNoCardsPath = "Data/Buttons/no_cards.png";

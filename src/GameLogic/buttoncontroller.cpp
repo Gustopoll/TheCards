@@ -13,7 +13,7 @@ ButtonController::ButtonController(
 
 void ButtonController::Show()
 {
-    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::kBoardButtonsGroup);
+    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::kButtonsGroup);
     if (buttonsImages.empty())
         return;
 
