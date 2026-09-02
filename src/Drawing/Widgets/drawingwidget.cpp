@@ -81,6 +81,13 @@ void DrawingWidget::MoveEntityTo(uint32_t id, float x, float y)
     update();
 }
 
+std::shared_ptr<DrawingEntity> DrawingWidget::GetOverlappingEntity(const uint32_t id)
+{
+    const auto entity = GetEntity(id);
+    const auto position = ConvertBlockToPixels(entity->GetPosX(), entity->GetPosY());
+    return GetEntityByPosition(position);
+}
+
 void DrawingWidget::ShowGrid(bool enable)
 {
     if (!_isInitialized)
@@ -185,7 +192,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent *event)
             });
 
         if (_clickableEntities.contains(clickedEntity->GetId()))
-            _entityPressedEvent.Fire(clickedEntity);
+            _entityPressedEvent.Fire(clickedEntity, event->button());
     }
 }
 
@@ -201,7 +208,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent *event)
     const auto& clickedData = item->second;
     if (clickedData.entity && _clickableEntities.contains(clickedData.entity->GetId()))
     {
-        _entityReleasedEvent.Fire(clickedData.entity);
+        _entityReleasedEvent.Fire(clickedData.entity, event->button());
     }
 
     _clickedEntities.erase(event->button());

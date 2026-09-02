@@ -35,7 +35,7 @@ void ButtonController::Show()
 void ButtonController::SubscribeToEvents()
 {
     _drawingWidget->GetEntityPressedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
+        [this](const std::shared_ptr<DrawingEntity> pressedEntity, Qt::MouseButton button)
         {
             qDebug() << pressedEntity->GetId() << " is pressed";
             pressedEntity->HighlightBorders(Qt::yellow);
@@ -43,7 +43,7 @@ void ButtonController::SubscribeToEvents()
         });
 
     _drawingWidget->GetEntityReleasedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
+        [this](const std::shared_ptr<DrawingEntity> pressedEntity, Qt::MouseButton button)
         {
             qDebug() << pressedEntity->GetId() << " is released";
             pressedEntity->ResetHighlightedBorders();

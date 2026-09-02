@@ -69,12 +69,12 @@ void EnemyController::ShowEnemy(
 void EnemyController::SubscribeToEvents()
 {
     _drawingWidget->GetEntityPressedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
+        [this](const std::shared_ptr<DrawingEntity> pressedEntity, Qt::MouseButton button)
         {
         });
 
     _drawingWidget->GetEntityReleasedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
+        [this](const std::shared_ptr<DrawingEntity> pressedEntity, Qt::MouseButton button)
         {
         });
 }

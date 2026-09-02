@@ -2,8 +2,6 @@
 
 #include "src/Utils/assets.h"
 
-#include <span>
-
 PlayerController::PlayerController(
     DrawingWidget* drawingWidget,
     DataPreloader& dataPreloader)
@@ -58,5 +56,32 @@ void PlayerController::ShowCards(
         float x = startPosX - i * step;
         const auto id = _drawingWidget->CreateEntity(cards[i], x, startPosY, cardWidth, cardHeight);
         _drawingWidget->SetEntityAsMovable(id);
+    }
+}
+
+void PlayerController::OnCardPressed(
+    std::shared_ptr<DrawingEntity> entity,
+    const Qt::MouseButton button)
+{
+    if (button == Qt::MouseButton::LeftButton)
+    {
+        _cardPositions.insert({
+            entity->GetId(),
+            QPointF(entity->GetPosX(), entity->GetPosY())});
+    }
+}
+
+void PlayerController::OnCardReleased(
+    std::shared_ptr<DrawingEntity> entity,
+    const Qt::MouseButton button)
+{
+    if (button == Qt::MouseButton::LeftButton)
+    {
+        auto foundEntity = _drawingWidget->GetOverlappingEntity(entity->GetId());
+        if (foundEntity)
+        {
+            //if (foundEntity->GetId())
+        }
+
     }
 }

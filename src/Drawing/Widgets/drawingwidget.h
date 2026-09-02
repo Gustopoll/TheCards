@@ -39,8 +39,8 @@ class DrawingWidget : public QWidget
 {
     Q_OBJECT
 public:
-    using EntityPressedEvent = EventHandler<std::shared_ptr<DrawingEntity>>;
-    using EntityReleasedEvent = EventHandler<std::shared_ptr<DrawingEntity>>;
+    using EntityPressedEvent = EventHandler<std::shared_ptr<DrawingEntity>, Qt::MouseButton>;
+    using EntityReleasedEvent = EventHandler<std::shared_ptr<DrawingEntity>, Qt::MouseButton>;
 
     DrawingWidget(QWidget *parent = nullptr);
 
@@ -93,6 +93,8 @@ public:
     //! @param x X position of entity in range [0, maxSizeX].
     //! @param y Y position of entity in range [0, maxSizeY].
     void MoveEntityTo(uint32_t id, float x, float y);
+
+    std::shared_ptr<DrawingEntity> GetOverlappingEntity(uint32_t id);
 
     //! Shows gird inside drawing area.
     void ShowGrid(bool enable);
