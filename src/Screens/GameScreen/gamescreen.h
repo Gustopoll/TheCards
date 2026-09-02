@@ -4,9 +4,6 @@
 #include "src/Screens/screencontroller.h"
 #include "src/GameLogic/game.h"
 #include "src/Utils/datapreloader.h"
-#include "src/GameLogic/buttoncontroller.h"
-#include "src/GameLogic/enemycontroller.h"
-#include "src/GameLogic/playercontroller.h"
 
 #include <QWidget>
 
@@ -37,10 +34,6 @@ private:
 
     DataPreloader& _dataPreloader;
     QWidget* _parent;
-
-    std::optional<ButtonController> _boardController;
-    std::optional<EnemyController> _enemyController;
-    std::optional<PlayerController> _playerController;
 };
 
 #endif // GAMESCREEN_H

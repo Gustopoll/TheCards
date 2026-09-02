@@ -1,8 +1,11 @@
 #ifndef BUTTONCONTROLLER_H
 #define BUTTONCONTROLLER_H
 
-#include "src/Drawing/Widgets/drawingwidget.h"
-#include "src/Utils/datapreloader.h"
+#include <memory>
+
+class DrawingWidget;
+class DrawingEntity;
+class DataPreloader;
 
 class ButtonController
 {
@@ -13,8 +16,9 @@ public:
 
     void Show();
 
+    void OnEntityPressed(std::shared_ptr<DrawingEntity> entity);
+    void OnEntityReleased(std::shared_ptr<DrawingEntity> entity);
 private:
-    void SubscribeToEvents();
 
     DrawingWidget* _drawingWidget;
     DataPreloader& _dataPreloader;

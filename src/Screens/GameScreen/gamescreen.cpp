@@ -15,10 +15,6 @@ GameScreen::GameScreen(
 
     ui->drawingWidget->Initialize(16, 9);
     ui->drawingWidget->ShowGrid(true);
-
-    _boardController.emplace(ui->drawingWidget, _dataPreloader);
-    _enemyController.emplace(ui->drawingWidget, _dataPreloader);
-    _playerController.emplace(ui->drawingWidget, _dataPreloader);
 }
 
 GameScreen::~GameScreen()
@@ -28,13 +24,12 @@ GameScreen::~GameScreen()
 
 void GameScreen::OnScreenActive()
 {
-    _boardController->Show();
-    _enemyController->Show({ {"Player1", 16}, {"Player2", 20}, {"Player3", 22}, {"Player4", 16}});
-    _playerController->ShowCards();
+    _game.emplace(5, ui->drawingWidget, _dataPreloader);
 }
 
 void GameScreen::OnScreenInactive()
 {
+    _game.reset();
 }
 
 void GameScreen::on_pushButton_clicked()

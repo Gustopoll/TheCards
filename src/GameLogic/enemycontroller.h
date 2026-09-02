@@ -1,8 +1,11 @@
 #ifndef ENEMYCONTROLLER_H
 #define ENEMYCONTROLLER_H
 
-#include "src/Drawing/Widgets/drawingwidget.h"
-#include "src/Utils/datapreloader.h"
+#include <QImage>
+#include <QString>
+
+class DrawingWidget;
+class DataPreloader;
 
 class EnemyController
 {
@@ -30,8 +33,6 @@ private:
         const Slot& slot,
         const Enemy& enemy,
         const std::shared_ptr<QImage>& backCardImage);
-
-    void SubscribeToEvents();
 
     const std::array<Slot, 4> _slots =
     {{

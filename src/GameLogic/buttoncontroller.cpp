@@ -1,5 +1,8 @@
 #include "buttoncontroller.h"
 
+#include "src/Drawing/Widgets/drawingwidget.h"
+#include "src/Utils/datapreloader.h"
+
 #include "src/Utils/assets.h"
 
 ButtonController::ButtonController(
@@ -8,7 +11,6 @@ ButtonController::ButtonController(
     : _drawingWidget(drawingWidget)
     , _dataPreloader(dataPreloader)
 {
-    SubscribeToEvents();
 }
 
 void ButtonController::Show()
@@ -31,22 +33,16 @@ void ButtonController::Show()
     _drawingWidget->SetEntityAsClickable(buttonId);
 }
 
-
-void ButtonController::SubscribeToEvents()
+void ButtonController::OnEntityPressed(std::shared_ptr<DrawingEntity> entity)
 {
-    _drawingWidget->GetEntityPressedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
-        {
-            qDebug() << pressedEntity->GetId() << " is pressed";
-            pressedEntity->HighlightBorders(Qt::yellow);
-            _drawingWidget->update();
-        });
+    qDebug() << entity->GetId() << " is pressed";
+    entity->HighlightBorders(Qt::yellow);
+    _drawingWidget->update();
+}
 
-    _drawingWidget->GetEntityReleasedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
-        {
-            qDebug() << pressedEntity->GetId() << " is released";
-            pressedEntity->ResetHighlightedBorders();
-            _drawingWidget->update();
-        });
+void ButtonController::OnEntityReleased(std::shared_ptr<DrawingEntity> entity)
+{
+    qDebug() << entity->GetId() << " is released";
+    entity->ResetHighlightedBorders();
+    _drawingWidget->update();
 }

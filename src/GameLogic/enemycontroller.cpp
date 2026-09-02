@@ -1,5 +1,8 @@
 #include "enemycontroller.h"
 
+#include "src/Drawing/Widgets/drawingwidget.h"
+#include "src/Utils/datapreloader.h"
+
 #include "src/Utils/assets.h"
 
 EnemyController::EnemyController(
@@ -8,7 +11,6 @@ EnemyController::EnemyController(
     : _drawingWidget(drawingWidget)
     , _dataPreloader(dataPreloader)
 {
-    SubscribeToEvents();
 }
 
 void EnemyController::Show(const std::vector<Enemy>& enemies)
@@ -80,17 +82,4 @@ void EnemyController::ShowEnemy(
         : slot.x;
 
     _drawingWidget->ShowText(enemy.name, textPosX, slot.y - 0.3, 0.25, Qt::blue);
-}
-
-void EnemyController::SubscribeToEvents()
-{
-    _drawingWidget->GetEntityPressedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
-        {
-        });
-
-    _drawingWidget->GetEntityReleasedEvent().Subscribe(
-        [this](const std::shared_ptr<DrawingEntity> pressedEntity)
-        {
-        });
 }

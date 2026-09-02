@@ -1,8 +1,12 @@
 #ifndef PLAYERCONTROLLER_H
 #define PLAYERCONTROLLER_H
 
-#include "src/Drawing/Widgets/drawingwidget.h"
-#include "src/Utils/datapreloader.h"
+#include <QImage>
+
+#include <vector>
+
+class DrawingWidget;
+class DataPreloader;
 
 class PlayerController
 {

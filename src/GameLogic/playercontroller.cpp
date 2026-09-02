@@ -1,8 +1,9 @@
 #include "playercontroller.h"
 
-#include "src/Utils/assets.h"
+#include "src/Drawing/Widgets/drawingwidget.h"
+#include "src/Utils/datapreloader.h"
 
-#include <span>
+#include "src/Utils/assets.h"
 
 PlayerController::PlayerController(
     DrawingWidget* drawingWidget,
