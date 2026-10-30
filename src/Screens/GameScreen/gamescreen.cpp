@@ -4,10 +4,12 @@
 #include <QDebug>
 
 GameScreen::GameScreen(
+    ScreenController& screenController,
     DataPreloader& dataPreloader,
     QWidget *parent)
     : ScreenWidget(parent)
     , ui(new Ui::GameScreen)
+    , _screenController(screenController)
     , _dataPreloader(dataPreloader)
     , _parent(parent)
 {
@@ -34,5 +36,5 @@ void GameScreen::OnScreenInactive()
 
 void GameScreen::on_pushButton_clicked()
 {
-    ScreenController::Get().ShowScreen(ScreenState::Settings);
+    _screenController.ShowScreen(ScreenState::Settings);
 }

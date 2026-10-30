@@ -1,10 +1,9 @@
 #include "screencontroller.h"
 #include <QDebug>
 
-ScreenController& ScreenController::Get()
+ScreenController::ScreenController(QObject* parent)
+    : QObject(parent)
 {
-    static ScreenController instance;
-    return instance;
 }
 
 void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWidget)
@@ -43,7 +42,7 @@ bool ScreenController::ShowScreen(ScreenState screen, bool recordHistory)
         _history.push_back(*_currentScreen);
     }
 
-    if (auto* w = dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
+    if (auto* w = qobject_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
     {
         w->OnScreenInactive();
     }
@@ -51,7 +50,7 @@ bool ScreenController::ShowScreen(ScreenState screen, bool recordHistory)
     _stackedWidget->setCurrentIndex(idIter->second);
     _currentScreen = screen;
 
-    if (auto* w = dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
+    if (auto* w = qobject_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
     {
         w->OnScreenActive();
     }

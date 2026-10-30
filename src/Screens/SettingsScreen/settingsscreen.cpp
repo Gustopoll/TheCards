@@ -3,13 +3,17 @@
 
 #include <QScreen>
 
-SettingsScreen::SettingsScreen(SettingsController& settings, QWidget *parent) :
-    ScreenWidget(parent),
-    ui(new Ui::SettingsScreen),
-    _settings(settings)
+SettingsScreen::SettingsScreen(
+    ScreenController& screenController,
+    SettingsController& settings,
+    QWidget *parent)
+    : ScreenWidget(parent)
+    , ui(new Ui::SettingsScreen)
+    , _screenController(screenController)
+    , _settings(settings)
+    , _parent(parent)
 {
     ui->setupUi(this);
-    _parent = parent;
 }
 
 SettingsScreen::~SettingsScreen()
@@ -30,9 +34,9 @@ void SettingsScreen::OnScreenInactive()
 
 void SettingsScreen::on_pushButton_clicked()
 {
-    if (!ScreenController::Get().GoBack())
+    if (!_screenController.GoBack())
     {
-        ScreenController::Get().ShowScreen(ScreenState::Game);
+        _screenController.ShowScreen(ScreenState::Game);
     }
 }
 
@@ -40,7 +44,6 @@ void SettingsScreen::on_serverPort_textChanged()
 {
     _settings.SetSettingValue(Settings::NetworkServerPort, ui->serverPort->text().toStdString());
 }
-
 
 void SettingsScreen::on_checkBoxFullscreen_checkStateChanged(const Qt::CheckState &arg1)
 {
@@ -58,4 +61,3 @@ void SettingsScreen::on_checkBoxFullscreen_checkStateChanged(const Qt::CheckStat
         _settings.SetSettingValue(Settings::GeneralFullscreen, "false");
     }
 }
-

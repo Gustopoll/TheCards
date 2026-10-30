@@ -69,9 +69,9 @@ MainScreen::MainScreen(QWidget *parent)
     _dataPreloader.PreloadImages(Assets::kBackgroundsGroup, backgroundsPaths);
 
     NotificationManager::Get().Initialize(this);
-    ScreenController::Get().Initialize(this, ui->stackedWidget);
-    ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(_dataPreloader, this));
-    ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_settingsController, this));
+    _screenController.Initialize(this, ui->stackedWidget);
+    _screenController.CreateScreen(ScreenState::Game, new GameScreen(_screenController, _dataPreloader, this));
+    _screenController.CreateScreen(ScreenState::Settings, new SettingsScreen(_screenController, _settingsController, this));
 
     _settingsController.GetSettingChangedEvent().Subscribe(
         [this](const std::string& path, const std::string& value)
@@ -117,7 +117,7 @@ void MainScreen::closeEvent(QCloseEvent *event)
     Q_UNUSED(event);
     qDebug() << "closeEvent";
     NotificationManager::Get().ClearAll();
-    ScreenController::Get().CleanAll();
+    _screenController.CleanAll();
 }
 
 void MainScreen::OnLoadingFinished()
@@ -125,19 +125,19 @@ void MainScreen::OnLoadingFinished()
     show();
     _loadingScreen->hide();
     _settingsController.Load();
-    ScreenController::Get().ShowScreen(ScreenState::Game);
+    _screenController.ShowScreen(ScreenState::Game);
 }
 
 void MainScreen::on_pushButton_clicked()
 {
     NotificationManager::Get().ShowWarning("Dominik je boss");
-    //ScreenController::Get().ShowScreen(ScreenState::Game);
+    //_screenController.ShowScreen(ScreenState::Game);
 }
 
 void MainScreen::on_pushButton_2_clicked()
 {
     //hide();
-    //ScreenController::Get().ShowScreen(ScreenState::Settings);
+    //_screenController.ShowScreen(ScreenState::Settings);
     //setWindowFlags(Qt::FramelessWindowHint);
     //show();
     //setGeometry(g);

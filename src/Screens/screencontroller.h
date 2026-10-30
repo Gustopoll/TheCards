@@ -28,8 +28,11 @@ class ScreenController : public QObject
 {
     Q_OBJECT
 public:
-    //! Returns the singleton instance of the ScreenController.
-    static ScreenController& Get();
+    explicit ScreenController(QObject* parent = nullptr);
+    ~ScreenController() override = default;
+
+    ScreenController(const ScreenController&) = delete;
+    ScreenController& operator=(const ScreenController&) = delete;
 
     //! Initializes the screen controller.
     //! Must be called before using other methods.
@@ -66,12 +69,6 @@ public:
     void CleanAll();
 
 private:
-    ScreenController() = default;
-    ~ScreenController() override = default;
-
-    ScreenController(const ScreenController&) = delete;
-    ScreenController& operator=(const ScreenController&) = delete;
-
     bool _initialized = false;
 
     //! Maps screen states to their corresponding indexes in the QStackedWidget.
@@ -80,7 +77,7 @@ private:
     //! History for navigation.
     std::vector<ScreenState> _history;
 
-    //! Currect screen.
+    //! Current screen.
     std::optional<ScreenState> _currentScreen;
 
     QWidget* _mainWidget = nullptr;

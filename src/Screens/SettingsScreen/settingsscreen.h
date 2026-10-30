@@ -15,8 +15,11 @@ class SettingsScreen : public ScreenWidget
     Q_OBJECT
 
 public:
-    SettingsScreen(SettingsController& settings, QWidget *parent = nullptr);
-    ~SettingsScreen();
+    SettingsScreen(
+        ScreenController& screenController,
+        SettingsController& settings,
+        QWidget *parent = nullptr);
+    ~SettingsScreen() override;
 
     void OnScreenActive() override;
     void OnScreenInactive() override;
@@ -31,10 +34,10 @@ private slots:
 private:
     Ui::SettingsScreen *ui;
 
+    ScreenController& _screenController;
     SettingsController& _settings;
 
     QWidget* _parent = nullptr;
-
 };
 
 #endif // SETTINGSSCREEN_H

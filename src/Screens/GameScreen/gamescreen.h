@@ -17,9 +17,10 @@ class GameScreen : public ScreenWidget
 
 public:
     GameScreen(
+        ScreenController& screenController,
         DataPreloader& dataPreloader,
         QWidget *parent = nullptr);
-    ~GameScreen();
+    ~GameScreen() override;
 
     void OnScreenActive() override;
     void OnScreenInactive() override;
@@ -30,6 +31,7 @@ private slots:
 private:
     Ui::GameScreen *ui;
 
+    ScreenController& _screenController;
     std::optional<Game> _game;
 
     DataPreloader& _dataPreloader;

@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include "src/Screens/Loadings/loadingscreen.h"
-#include "src/Utils/datapreloader.h"
+#include "src/Screens/screencontroller.h"
 #include "src/Settings/settingscontroller.h"
+#include "src/Utils/datapreloader.h"
 
 #include <QMainWindow>
 
@@ -17,7 +18,7 @@ class MainScreen : public QMainWindow
 
 public:
     MainScreen(QWidget *parent = nullptr);
-    ~MainScreen();
+    ~MainScreen() override;
 
     void Start();
     void OnLoadingFinished();
@@ -30,11 +31,13 @@ private slots:
 private:
     Ui::MainScreen *ui;
 
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 
     SettingsController _settingsController;
 
     DataPreloader _dataPreloader;
+
+    ScreenController _screenController;
 
     LoadingScreen* _loadingScreen = nullptr;
 };
