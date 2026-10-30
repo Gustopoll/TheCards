@@ -26,7 +26,8 @@ SOURCES += \
     src/GameLogic/enemycontroller.cpp \
     src/GameLogic/game.cpp \
     src/GameLogic/playercontroller.cpp \
-    src/Screens/Dialogs/infodialog.cpp \
+    src/Screens/Notifications/infodialog.cpp \
+    src/Screens/Notifications/notificationmanager.cpp \
     src/Screens/GameScreen/gamescreen.cpp \
     src/Screens/Loadings/loadingscreen.cpp \
     src/Screens/MainScreen/mainscreen.cpp \
@@ -53,12 +54,14 @@ HEADERS += \
     src/GameLogic/enemycontroller.h \
     src/GameLogic/game.h \
     src/GameLogic/playercontroller.h \
-    src/Screens/Dialogs/infodialog.h \
+    src/Screens/Notifications/infodialog.h \
+    src/Screens/Notifications/notificationmanager.h \
     src/Screens/GameScreen/gamescreen.h \
     src/Screens/Loadings/loadingscreen.h \
     src/Screens/MainScreen/mainscreen.h \
     src/Screens/SettingsScreen/settingsscreen.h \
     src/Screens/screencontroller.h \
+    src/Screens/screenwidget.h \
     src/Screens/stylesheetcontroller.h \
     src/Settings/settingscontroller.h \
     src/Settings/settingswriter.h \
@@ -67,7 +70,7 @@ HEADERS += \
     src/Utils/eventhandler.h
 
 FORMS += \
-    src/Screens/Dialogs/infodialog.ui \
+    src/Screens/Notifications/infodialog.ui \
     src/Screens/GameScreen/gamescreen.ui \
     src/Screens/Loadings/loadingscreen.ui \
     src/Screens/MainScreen/mainscreen.ui \

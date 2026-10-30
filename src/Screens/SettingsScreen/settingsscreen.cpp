@@ -30,7 +30,10 @@ void SettingsScreen::OnScreenInactive()
 
 void SettingsScreen::on_pushButton_clicked()
 {
-    ScreenController::Get().ShowScreen(ScreenState::Game);
+    if (!ScreenController::Get().GoBack())
+    {
+        ScreenController::Get().ShowScreen(ScreenState::Game);
+    }
 }
 
 void SettingsScreen::on_serverPort_textChanged()

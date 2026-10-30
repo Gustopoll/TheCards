@@ -1,16 +1,13 @@
 #ifndef SCREENCONTROLLER_H
 #define SCREENCONTROLLER_H
 
-#include "src/Screens/Dialogs/infodialog.h"
-#include "src/Screens/stylesheetcontroller.h"
+#include "src/Screens/screenwidget.h"
 
-#include <QWidget>
-#include <QMainWindow>
+#include <QObject>
 #include <QStackedWidget>
-#include <QTimer>
 #include <unordered_map>
-#include <memory>
-#include <functional>
+#include <vector>
+#include <optional>
 
 enum class ScreenState
 {
@@ -27,37 +24,22 @@ struct ScreenStateHash
     }
 };
 
-class ScreenWidget : public QWidget
-{
-public:
-    ScreenWidget(QWidget* parent)
-        : QWidget(parent)
-    {};
-
-    //! Calls when screen became active.
-    virtual void OnScreenActive() = 0;
-
-    //! Calls when screen is no longer active.
-    virtual void OnScreenInactive() = 0;
-};
-
 class ScreenController : public QObject
 {
+    Q_OBJECT
 public:
     //! Returns the singleton instance of the ScreenController.
     static ScreenController& Get();
 
     //! Initializes the screen controller.
     //! Must be called before using other methods.
-    //!
     //! @param mainWidget Main widget of whole application.
     //! @param stackedWidget Widget where all screens are.
     void Initialize(QWidget* mainWidget, QStackedWidget* stackedWidget);
 
     //! Creates a new screen after the controller has been initialized.
-    //!
     //! @param screen Screen state associated with the given widget.
-    //! @param widget Widget that represet whole screen.
+    //! @param widget Widget that represents the screen.
     //! @retval true if screen is created.
     //! @retval false if the ScreenController is not initialized or
     //!               the screen already exists or
@@ -65,41 +47,44 @@ public:
     bool CreateScreen(ScreenState screen, ScreenWidget* widget);
 
     //! Shows the widget based on given screen state.
-    //!
     //! @param screen State of the screen to be displayed.
+    //! @param recordHistory Whether to save the previous screen to back history.
     //! @retval true if scene is shown.
     //! @retval false if the ScreenController is not initialized or
-    //!               the screen does not exists.
-    bool ShowScreen(ScreenState screen);
+    //!               the screen does not exist.
+    bool ShowScreen(ScreenState screen, bool recordHistory = true);
 
-    //! Shows the warning dialog in top left corenr.
-    //!
-    //! @param text Text to be displayed.
-    void ShowWarningDialog(const QString& text);
+    //! Navigates to the previously displayed screen.
+    //! @retval true if navigation succeeded.
+    //! @retval false if no history is available.
+    bool GoBack();
 
-    //! Cleans the screens.
+    //! Gets the currently active screen state.
+    std::optional<ScreenState> GetCurrentScreen() const { return _currentScreen; }
+
+    //! Cleans up all screens.
     void CleanAll();
 
 private:
-    void OnUpdate();
+    ScreenController() = default;
+    ~ScreenController() override = default;
 
-    QTimer* _timer = nullptr;
+    ScreenController(const ScreenController&) = delete;
+    ScreenController& operator=(const ScreenController&) = delete;
 
     bool _initialized = false;
 
-    //! Maps screen names to their corresponding indexes in the QStackedWidget.
+    //! Maps screen states to their corresponding indexes in the QStackedWidget.
     std::unordered_map<ScreenState, int, ScreenStateHash> _screenIndexes;
+
+    //! History for navigation.
+    std::vector<ScreenState> _history;
+
+    //! Currect screen.
+    std::optional<ScreenState> _currentScreen;
 
     QWidget* _mainWidget = nullptr;
     QStackedWidget* _stackedWidget = nullptr;
-
-    //! All currectly shown informational dialogs.
-    std::vector<std::shared_ptr<InfoDialog>> _infoDialog;
-
-    //! Collection of all positions of info dialog to delete next update (in OnUpdate).
-    std::vector<uint32_t> _infoDialogToDelete;
-
-    StyleSheetController _styleSheetController;
 };
 
 #endif // SCREENCONTROLLER_H

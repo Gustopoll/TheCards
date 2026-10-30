@@ -3,8 +3,8 @@
 
 ScreenController& ScreenController::Get()
 {
-    static ScreenController instancePtr;
-    return instancePtr;
+    static ScreenController instance;
+    return instance;
 }
 
 void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWidget)
@@ -12,21 +12,16 @@ void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWi
     _mainWidget = mainWidget;
     _stackedWidget = stackedWidget;
     _initialized = true;
-
-    _timer = new QTimer(this);
-    connect(_timer, &QTimer::timeout, this, &ScreenController::OnUpdate);
-    _timer->start(50);
+    _history.clear();
+    _currentScreen = std::nullopt;
 }
 
 bool ScreenController::CreateScreen(ScreenState screen, ScreenWidget* widget)
 {
-   if (!_initialized)
+    if (!_initialized || !widget || !_stackedWidget)
         return false;
 
-   if (!widget)
-       return false;
-
-   if (_screenIndexes.find(screen) != _screenIndexes.end())
+    if (_screenIndexes.contains(screen))
         return false;
 
     _stackedWidget->addWidget(widget);
@@ -34,23 +29,29 @@ bool ScreenController::CreateScreen(ScreenState screen, ScreenWidget* widget)
     return true;
 }
 
-bool ScreenController::ShowScreen(ScreenState screen)
+bool ScreenController::ShowScreen(ScreenState screen, bool recordHistory)
 {
-    if (!_initialized)
+    if (!_initialized || !_stackedWidget)
         return false;
 
     const auto idIter = _screenIndexes.find(screen);
     if (idIter == _screenIndexes.end())
         return false;
 
-    if (ScreenWidget* w =  dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
+    if (_currentScreen.has_value() && recordHistory && *_currentScreen != screen)
+    {
+        _history.push_back(*_currentScreen);
+    }
+
+    if (auto* w = dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
     {
         w->OnScreenInactive();
     }
 
     _stackedWidget->setCurrentIndex(idIter->second);
+    _currentScreen = screen;
 
-    if (ScreenWidget* w = dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
+    if (auto* w = dynamic_cast<ScreenWidget*>(_stackedWidget->currentWidget()))
     {
         w->OnScreenActive();
     }
@@ -58,56 +59,36 @@ bool ScreenController::ShowScreen(ScreenState screen)
     return true;
 }
 
-void ScreenController::ShowWarningDialog(const QString &text)
+bool ScreenController::GoBack()
 {
-    auto& item = _infoDialog.emplace_back(std::make_shared<InfoDialog>(_mainWidget, _infoDialog.size()));
-    item->SetText(text);
+    if (_history.empty())
+        return false;
 
-    item->GetCloseDialogEvent().Subscribe(
-        [this](uint32_t orderNumber)
-        {
-            _infoDialogToDelete.push_back(orderNumber);
-        });
+    const ScreenState previousScreen = _history.back();
+    _history.pop_back();
 
-    const auto style = _styleSheetController.GetStyleSheet(kStyleInfoDialogPath);
-    if (style.isEmpty())
-    {
-        QString message = std::format("Unable to load a style from:<br>'{}'", kStyleInfoDialogPath).c_str();
-        item->SetText(message);
-    }
-    else
-    {
-        item->setStyleSheet(style);
-    }
-
-    item->show();
+    return ShowScreen(previousScreen, false);
 }
 
 void ScreenController::CleanAll()
 {
-    if (!_initialized)
+    if (!_initialized || !_stackedWidget)
         return;
 
-    for (const auto screenIter : _screenIndexes)
+    for (const auto& [_, index] : _screenIndexes)
     {
-        _stackedWidget->removeWidget(_stackedWidget->widget(screenIter.second));
-    }
-
-    _infoDialog.clear();
-
-    delete _timer;
-    _initialized = false;
-}
-
-void ScreenController::OnUpdate()
-{
-    for (const auto position : _infoDialogToDelete)
-    {
-        _infoDialog.erase(_infoDialog.begin() + position);
-        for (uint32_t newPosition = position; newPosition < _infoDialog.size(); ++newPosition)
+        auto* widget = _stackedWidget->widget(index);
+        _stackedWidget->removeWidget(widget);
+        if (widget)
         {
-            _infoDialog[newPosition]->ChangePosition(newPosition);
+            widget->deleteLater();
         }
     }
-    _infoDialogToDelete.clear();
+
+    _screenIndexes.clear();
+    _history.clear();
+    _currentScreen = std::nullopt;
+    _initialized = false;
+    _mainWidget = nullptr;
+    _stackedWidget = nullptr;
 }

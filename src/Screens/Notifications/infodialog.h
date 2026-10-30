@@ -14,16 +14,13 @@ class InfoDialog : public QWidget
     Q_OBJECT
 
 public:
-
     //! Event called when dialog is closed.
-    using CloseDialogEvent = EventHandler<
-        //! Position of closed dialog.
-        uint32_t>;
+    using CloseDialogEvent = EventHandler<InfoDialog*>;
 
     InfoDialog(
         QWidget *parent = nullptr,
         uint32_t orderNumber = 0);
-    ~InfoDialog();
+    ~InfoDialog() override;
 
     void SetText(const QString& text);
 

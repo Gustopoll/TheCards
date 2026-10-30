@@ -30,5 +30,5 @@ void InfoDialog::ChangePosition(const uint32_t position)
 void InfoDialog::on_buttonHide_clicked()
 {
     close();
-    _closeDialogEvent.Fire(_position);
+    _closeDialogEvent.Fire(this);
 }

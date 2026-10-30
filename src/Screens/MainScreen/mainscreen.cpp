@@ -3,6 +3,7 @@
 
 #include "src/Utils/assets.h"
 #include "src/Screens/screencontroller.h"
+#include "src/Screens/Notifications/notificationmanager.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 #include "src/Screens/GameScreen/gamescreen.h"
 #include "src/Screens/Loadings/loadingscreen.h"
@@ -67,6 +68,7 @@ MainScreen::MainScreen(QWidget *parent)
         };
     _dataPreloader.PreloadImages(Assets::kBackgroundsGroup, backgroundsPaths);
 
+    NotificationManager::Get().Initialize(this);
     ScreenController::Get().Initialize(this, ui->stackedWidget);
     ScreenController::Get().CreateScreen(ScreenState::Game, new GameScreen(_dataPreloader, this));
     ScreenController::Get().CreateScreen(ScreenState::Settings, new SettingsScreen(_settingsController, this));
@@ -114,6 +116,7 @@ void MainScreen::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     qDebug() << "closeEvent";
+    NotificationManager::Get().ClearAll();
     ScreenController::Get().CleanAll();
 }
 
@@ -127,7 +130,7 @@ void MainScreen::OnLoadingFinished()
 
 void MainScreen::on_pushButton_clicked()
 {
-    ScreenController::Get().ShowWarningDialog("Dominik je boss");
+    NotificationManager::Get().ShowWarning("Dominik je boss");
     //ScreenController::Get().ShowScreen(ScreenState::Game);
 }
 
