@@ -17,56 +17,9 @@ MainScreen::MainScreen(QWidget *parent)
 {
     ui->setupUi(this);
 
-    std::vector<std::string> cardPaths
-    {
-        Assets::kCardA0APath,
-        Assets::kCardA07Path,
-        Assets::kCardA08Path,
-        Assets::kCardA09Path,
-        Assets::kCardA10Path,
-        Assets::kCardAJ1Path,
-        Assets::kCardAJ2Path,
-        Assets::kCardAKIPath,
-        Assets::kCardB0APath,
-        Assets::kCardB07Path,
-        Assets::kCardB08Path,
-        Assets::kCardB09Path,
-        Assets::kCardB10Path,
-        Assets::kCardBJ1Path,
-        Assets::kCardBJ2Path,
-        Assets::kCardBKIPath,
-        Assets::kCardH0APath,
-        Assets::kCardH07Path,
-        Assets::kCardH08Path,
-        Assets::kCardH09Path,
-        Assets::kCardH10Path,
-        Assets::kCardHJ1Path,
-        Assets::kCardHJ2Path,
-        Assets::kCardHKIPath,
-        Assets::kCardL0APath,
-        Assets::kCardL07Path,
-        Assets::kCardL08Path,
-        Assets::kCardL09Path,
-        Assets::kCardL10Path,
-        Assets::kCardLJ1Path,
-        Assets::kCardLJ2Path,
-        Assets::kCardLKIPath
-    };
-    _dataPreloader.PreloadImages(Assets::kCardsGroup, cardPaths);
-
-    std::vector<std::string> boardButtonsPaths
-    {
-        Assets::kButtonEndTurnPath,
-        Assets::kButtonNoCardsPath,
-        Assets::kButtonBackCardPath
-    };
-    _dataPreloader.PreloadImages(Assets::kButtonsGroup, boardButtonsPaths);
-
-    std::vector<std::string> backgroundsPaths
-        {
-            Assets::kEnemyBackgroundPath,
-        };
-    _dataPreloader.PreloadImages(Assets::kBackgroundsGroup, backgroundsPaths);
+    _dataPreloader.PreloadImages(Assets::Cards::kGroup, Assets::Cards::kPaths);
+    _dataPreloader.PreloadImages(Assets::Buttons::kGroup, Assets::Buttons::kPaths);
+    _dataPreloader.PreloadImages(Assets::Backgrounds::kGroup, Assets::Backgrounds::kPaths);
 
     _notificationManager.Initialize(this);
     _screenManager.Initialize(this, ui->stackedWidget);

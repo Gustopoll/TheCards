@@ -54,11 +54,6 @@ void DataPreloader::LoadImageGroup(const std::string& groupName)
     _imageLoadingFinishedEvent.Fire(groupName);
 }
 
-void DataPreloader::PreloadImages(const std::string& groupName, const std::vector<std::string>& paths)
-{
-    _preloadedImages[groupName] = PreloadedImageData(paths, {});
-}
-
 std::vector<std::shared_ptr<QImage>> DataPreloader::GetPreloadedImages(const std::string& groupName)
 {
     if (const auto& images = _preloadedImages.find(groupName);

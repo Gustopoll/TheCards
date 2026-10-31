@@ -15,13 +15,13 @@ ButtonController::ButtonController(
 
 void ButtonController::Show()
 {
-    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::kButtonsGroup);
+    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::Buttons::kGroup);
     if (buttonsImages.empty())
         return;
 
-    const auto endTurnImage = buttonsImages[0];
-    const auto noCardsImage = buttonsImages[1];
-    const auto backCardImage = buttonsImages[2];
+    const auto endTurnImage = buttonsImages[Assets::Buttons::kEndTurn];
+    const auto noCardsImage = buttonsImages[Assets::Buttons::kNoCards];
+    const auto backCardImage = buttonsImages[Assets::Buttons::kBackCard];
 
     auto buttonId = _drawingWidget->CreateEntity(endTurnImage, 0, 5, 1, 1);
     _drawingWidget->SetEntityAsClickable(buttonId);

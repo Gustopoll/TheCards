@@ -39,9 +39,12 @@ public:
     void LoadImageGroup(const std::string& groupName);
 
     //! Preloads the image data.
-    //! @param name Group name of the data to preload.
+    //! @param groupName Group name of the data to preload.
     //! @param paths Paths to the images to preload.
-    void PreloadImages(const std::string& groupName, const std::vector<std::string>& paths);
+    void PreloadImages(const std::string& groupName, const auto& paths)
+    {
+        _preloadedImages[groupName] = PreloadedImageData(std::vector<std::string>(std::begin(paths), std::end(paths)), {});
+    }
 
     //! Gets all the preloaded images by the group name.
     std::vector<std::shared_ptr<QImage>> GetPreloadedImages(const std::string& groupName);

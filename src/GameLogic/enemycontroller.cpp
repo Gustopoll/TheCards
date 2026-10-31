@@ -19,11 +19,11 @@ void EnemyController::Show(const std::vector<Enemy>& enemies)
     if (count <= 0)
         return;
 
-    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::kButtonsGroup);
+    const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::Buttons::kGroup);
     if (buttonsImages.empty())
         return;
 
-    const auto& backCardImage = buttonsImages[2];
+    const auto& backCardImage = buttonsImages[Assets::Buttons::kBackCard];
 
     for (size_t i = 0; i < count; ++i)
     {
@@ -39,7 +39,7 @@ void EnemyController::ShowEnemy(
     const std::shared_ptr<QImage>& backCardImage)
 {
     const float slotWidth = 4;
-    const auto backgrounds = _dataPreloader.GetPreloadedImages(Assets::kBackgroundsGroup);
+    const auto backgrounds = _dataPreloader.GetPreloadedImages(Assets::Backgrounds::kGroup);
     if (!backgrounds.empty())
     {
         float posX = slot.reverseDirection
@@ -47,7 +47,7 @@ void EnemyController::ShowEnemy(
             : slot.x - 0.6;
         float posY = slot.y - 0.75;
 
-        _drawingWidget->CreateEntity(backgrounds[0], posX, posY, 5, 2);
+        _drawingWidget->CreateEntity(backgrounds[Assets::Backgrounds::kEnemyBackground], posX, posY, 5, 2);
     }
 
     float cardWidth = 0.5f;

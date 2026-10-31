@@ -15,7 +15,7 @@ PlayerController::PlayerController(
 
 void PlayerController::ShowCards()
 {
-    const auto cardImages = _dataPreloader.GetPreloadedImages(Assets::kCardsGroup);
+    const auto cardImages = _dataPreloader.GetPreloadedImages(Assets::Cards::kGroup);
     if (cardImages.empty())
         return;
 
