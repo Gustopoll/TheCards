@@ -1,7 +1,7 @@
 #ifndef GAMESCREEN_H
 #define GAMESCREEN_H
 
-#include "src/Screens/screencontroller.h"
+#include "src/Screens/screenmanager.h"
 #include "src/GameLogic/game.h"
 #include "src/Utils/datapreloader.h"
 
@@ -17,7 +17,7 @@ class GameScreen : public ScreenWidget
 
 public:
     GameScreen(
-        ScreenController& screenController,
+        ScreenManager& screenManager,
         DataPreloader& dataPreloader,
         QWidget *parent = nullptr);
     ~GameScreen() override;
@@ -31,7 +31,7 @@ private slots:
 private:
     Ui::GameScreen *ui;
 
-    ScreenController& _screenController;
+    ScreenManager& _screenManager;
     std::optional<Game> _game;
 
     DataPreloader& _dataPreloader;

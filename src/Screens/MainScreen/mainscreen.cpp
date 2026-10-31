@@ -2,7 +2,7 @@
 #include "ui_mainscreen.h"
 
 #include "src/Utils/assets.h"
-#include "src/Screens/screencontroller.h"
+#include "src/Screens/screenmanager.h"
 #include "src/Screens/Notifications/notificationmanager.h"
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 #include "src/Screens/GameScreen/gamescreen.h"
@@ -69,9 +69,9 @@ MainScreen::MainScreen(QWidget *parent)
     _dataPreloader.PreloadImages(Assets::kBackgroundsGroup, backgroundsPaths);
 
     _notificationManager.Initialize(this);
-    _screenController.Initialize(this, ui->stackedWidget);
-    _screenController.CreateScreen(ScreenState::Game, new GameScreen(_screenController, _dataPreloader, this));
-    _screenController.CreateScreen(ScreenState::Settings, new SettingsScreen(_screenController, _settingsController, this));
+    _screenManager.Initialize(this, ui->stackedWidget);
+    _screenManager.CreateScreen(ScreenState::Game, new GameScreen(_screenManager, _dataPreloader, this));
+    _screenManager.CreateScreen(ScreenState::Settings, new SettingsScreen(_screenManager, _settingsController, this));
 
     _settingsController.GetSettingChangedEvent().Subscribe(
         [this](const std::string& path, const std::string& value)
@@ -117,7 +117,7 @@ void MainScreen::closeEvent(QCloseEvent *event)
     Q_UNUSED(event);
     qDebug() << "closeEvent";
     _notificationManager.ClearAll();
-    _screenController.CleanAll();
+    _screenManager.CleanAll();
 }
 
 void MainScreen::OnLoadingFinished()
@@ -125,19 +125,19 @@ void MainScreen::OnLoadingFinished()
     show();
     _loadingScreen->hide();
     _settingsController.Load();
-    _screenController.ShowScreen(ScreenState::Game);
+    _screenManager.ShowScreen(ScreenState::Game);
 }
 
 void MainScreen::on_pushButton_clicked()
 {
     _notificationManager.ShowWarning("Dominik je boss");
-    //_screenController.ShowScreen(ScreenState::Game);
+    //_screenManager.ShowScreen(ScreenState::Game);
 }
 
 void MainScreen::on_pushButton_2_clicked()
 {
     //hide();
-    //_screenController.ShowScreen(ScreenState::Settings);
+    //_screenManager.ShowScreen(ScreenState::Settings);
     //setWindowFlags(Qt::FramelessWindowHint);
     //show();
     //setGeometry(g);

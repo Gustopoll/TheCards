@@ -3,7 +3,7 @@
 
 #include "src/Screens/Loadings/loadingscreen.h"
 #include "src/Screens/Notifications/notificationmanager.h"
-#include "src/Screens/screencontroller.h"
+#include "src/Screens/screenmanager.h"
 #include "src/Settings/settingscontroller.h"
 #include "src/Utils/datapreloader.h"
 
@@ -12,8 +12,6 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainScreen; }
 QT_END_NAMESPACE
-
-class NotificationManager;
 
 class MainScreen : public QMainWindow
 {
@@ -40,7 +38,7 @@ private:
 
     DataPreloader _dataPreloader;
 
-    ScreenController _screenController;
+    ScreenManager _screenManager;
 
     NotificationManager _notificationManager;
 

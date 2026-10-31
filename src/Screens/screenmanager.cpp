@@ -1,12 +1,12 @@
-#include "screencontroller.h"
+#include "screenmanager.h"
 #include <QDebug>
 
-ScreenController::ScreenController(QObject* parent)
+ScreenManager::ScreenManager(QObject* parent)
     : QObject(parent)
 {
 }
 
-void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWidget)
+void ScreenManager::Initialize(QWidget* mainWidget, QStackedWidget* stackedWidget)
 {
     _mainWidget = mainWidget;
     _stackedWidget = stackedWidget;
@@ -15,7 +15,7 @@ void ScreenController::Initialize(QWidget* mainWidget, QStackedWidget* stackedWi
     _currentScreen = std::nullopt;
 }
 
-bool ScreenController::CreateScreen(ScreenState screen, ScreenWidget* widget)
+bool ScreenManager::CreateScreen(ScreenState screen, ScreenWidget* widget)
 {
     if (!_initialized || !widget || !_stackedWidget)
         return false;
@@ -28,7 +28,7 @@ bool ScreenController::CreateScreen(ScreenState screen, ScreenWidget* widget)
     return true;
 }
 
-bool ScreenController::ShowScreen(ScreenState screen, bool recordHistory)
+bool ScreenManager::ShowScreen(ScreenState screen, bool recordHistory)
 {
     if (!_initialized || !_stackedWidget)
         return false;
@@ -58,7 +58,7 @@ bool ScreenController::ShowScreen(ScreenState screen, bool recordHistory)
     return true;
 }
 
-bool ScreenController::GoBack()
+bool ScreenManager::GoBack()
 {
     if (_history.empty())
         return false;
@@ -69,7 +69,7 @@ bool ScreenController::GoBack()
     return ShowScreen(previousScreen, false);
 }
 
-void ScreenController::CleanAll()
+void ScreenManager::CleanAll()
 {
     if (!_initialized || !_stackedWidget)
         return;

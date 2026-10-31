@@ -1,5 +1,5 @@
-#ifndef SCREENCONTROLLER_H
-#define SCREENCONTROLLER_H
+#ifndef SCREENMANAGER_H
+#define SCREENMANAGER_H
 
 #include "src/Screens/screenwidget.h"
 
@@ -24,27 +24,27 @@ struct ScreenStateHash
     }
 };
 
-class ScreenController : public QObject
+class ScreenManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScreenController(QObject* parent = nullptr);
-    ~ScreenController() override = default;
+    explicit ScreenManager(QObject* parent = nullptr);
+    ~ScreenManager() override = default;
 
-    ScreenController(const ScreenController&) = delete;
-    ScreenController& operator=(const ScreenController&) = delete;
+    ScreenManager(const ScreenManager&) = delete;
+    ScreenManager& operator=(const ScreenManager&) = delete;
 
-    //! Initializes the screen controller.
+    //! Initializes the screen manager.
     //! Must be called before using other methods.
     //! @param mainWidget Main widget of whole application.
     //! @param stackedWidget Widget where all screens are.
     void Initialize(QWidget* mainWidget, QStackedWidget* stackedWidget);
 
-    //! Creates a new screen after the controller has been initialized.
+    //! Creates a new screen after the manager has been initialized.
     //! @param screen Screen state associated with the given widget.
     //! @param widget Widget that represents the screen.
     //! @retval true if screen is created.
-    //! @retval false if the ScreenController is not initialized or
+    //! @retval false if the ScreenManager is not initialized or
     //!               the screen already exists or
     //!               the widget is null.
     bool CreateScreen(ScreenState screen, ScreenWidget* widget);
@@ -53,7 +53,7 @@ public:
     //! @param screen State of the screen to be displayed.
     //! @param recordHistory Whether to save the previous screen to back history.
     //! @retval true if scene is shown.
-    //! @retval false if the ScreenController is not initialized or
+    //! @retval false if the ScreenManager is not initialized or
     //!               the screen does not exist.
     bool ShowScreen(ScreenState screen, bool recordHistory = true);
 
@@ -84,4 +84,4 @@ private:
     QStackedWidget* _stackedWidget = nullptr;
 };
 
-#endif // SCREENCONTROLLER_H
+#endif // SCREENMANAGER_H

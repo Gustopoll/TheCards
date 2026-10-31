@@ -4,7 +4,7 @@
 #include <QString>
 #include <unordered_map>
 
-constexpr char kStyleInfoDialogPath[] = "Data/Styles/InfoDialog.qss";
+constexpr char kStyleNotificationBannerPath[] = "Data/Styles/NotificationBanner.qss";
 
 class StyleSheetController
 {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>InfoDialog</class>
- <widget class="QWidget" name="InfoDialog">
+ <class>NotificationBanner</class>
+ <widget class="QWidget" name="NotificationBanner">
   <property name="windowModality">
    <enum>Qt::WindowModality::NonModal</enum>
   </property>

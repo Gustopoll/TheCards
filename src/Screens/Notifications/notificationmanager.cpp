@@ -1,6 +1,7 @@
 #include "notificationmanager.h"
 
 #include <QDebug>
+#include <algorithm>
 #include <format>
 
 NotificationManager::NotificationManager(QObject* parent)
@@ -22,55 +23,55 @@ void NotificationManager::ShowWarning(const QString& text)
         return;
     }
 
-    const uint32_t currentPosition = static_cast<uint32_t>(_dialogs.size());
-    auto dialog = std::make_shared<InfoDialog>(_parentWidget, currentPosition);
-    dialog->SetText(text);
+    const uint32_t currentPosition = static_cast<uint32_t>(_banners.size());
+    auto banner = std::make_shared<NotificationBanner>(_parentWidget, currentPosition);
+    banner->SetText(text);
 
-    dialog->GetCloseDialogEvent().Subscribe(
-        [this](InfoDialog* closedDialog)
+    banner->GetCloseBannerEvent().Subscribe(
+        [this](NotificationBanner* closedBanner)
         {
-            OnDialogClosed(closedDialog);
+            OnBannerClosed(closedBanner);
         });
 
-    const auto style = _styleSheetController.GetStyleSheet(kStyleInfoDialogPath);
+    const auto style = _styleSheetController.GetStyleSheet(kStyleNotificationBannerPath);
     if (style.isEmpty())
     {
-        const QString message = std::format("Unable to load style from:<br>'{}'", kStyleInfoDialogPath).c_str();
-        dialog->SetText(message);
+        const QString message = std::format("Unable to load style from:<br>'{}'", kStyleNotificationBannerPath).c_str();
+        banner->SetText(message);
     }
     else
     {
-        dialog->setStyleSheet(style);
+        banner->setStyleSheet(style);
     }
 
-    _dialogs.push_back(dialog);
-    dialog->show();
+    _banners.push_back(banner);
+    banner->show();
 }
 
-void NotificationManager::OnDialogClosed(InfoDialog* dialog)
+void NotificationManager::OnBannerClosed(NotificationBanner* banner)
 {
-    std::erase_if(_dialogs, [dialog](const std::shared_ptr<InfoDialog>& item) {
-        return item.get() == dialog;
+    std::erase_if(_banners, [banner](const std::shared_ptr<NotificationBanner>& item) {
+        return item.get() == banner;
     });
 
-    RepositionDialogs();
+    RepositionBanners();
 }
 
-void NotificationManager::RepositionDialogs()
+void NotificationManager::RepositionBanners()
 {
-    for (size_t i = 0; i < _dialogs.size(); ++i)
+    for (size_t i = 0; i < _banners.size(); ++i)
     {
-        _dialogs[i]->ChangePosition(static_cast<uint32_t>(i));
+        _banners[i]->ChangePosition(static_cast<uint32_t>(i));
     }
 }
 
 void NotificationManager::ClearAll()
 {
-    for (auto& dialog : _dialogs)
+    for (auto& banner : _banners)
     {
-        dialog->close();
+        banner->close();
     }
-    _dialogs.clear();
+    _banners.clear();
     _initialized = false;
     _parentWidget = nullptr;
 }

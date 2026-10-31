@@ -4,12 +4,12 @@
 #include <QScreen>
 
 SettingsScreen::SettingsScreen(
-    ScreenController& screenController,
+    ScreenManager& screenManager,
     SettingsController& settings,
     QWidget *parent)
     : ScreenWidget(parent)
     , ui(new Ui::SettingsScreen)
-    , _screenController(screenController)
+    , _screenManager(screenManager)
     , _settings(settings)
     , _parent(parent)
 {
@@ -34,9 +34,9 @@ void SettingsScreen::OnScreenInactive()
 
 void SettingsScreen::on_pushButton_clicked()
 {
-    if (!_screenController.GoBack())
+    if (!_screenManager.GoBack())
     {
-        _screenController.ShowScreen(ScreenState::Game);
+        _screenManager.ShowScreen(ScreenState::Game);
     }
 }
 

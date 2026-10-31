@@ -1,6 +1,6 @@
 #include "stylesheetcontroller.h"
 
-#include "src/Screens/screencontroller.h"
+
 
 #include <QDir>
 #include <QFile>

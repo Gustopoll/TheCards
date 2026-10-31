@@ -1,7 +1,7 @@
 #ifndef SETTINGSSCREEN_H
 #define SETTINGSSCREEN_H
 
-#include "src/Screens/screencontroller.h"
+#include "src/Screens/screenmanager.h"
 #include "src/Settings/settingscontroller.h"
 
 #include <QWidget>
@@ -16,7 +16,7 @@ class SettingsScreen : public ScreenWidget
 
 public:
     SettingsScreen(
-        ScreenController& screenController,
+        ScreenManager& screenManager,
         SettingsController& settings,
         QWidget *parent = nullptr);
     ~SettingsScreen() override;
@@ -34,7 +34,7 @@ private slots:
 private:
     Ui::SettingsScreen *ui;
 
-    ScreenController& _screenController;
+    ScreenManager& _screenManager;
     SettingsController& _settings;
 
     QWidget* _parent = nullptr;

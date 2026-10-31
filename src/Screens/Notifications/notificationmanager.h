@@ -1,7 +1,7 @@
 #ifndef NOTIFICATIONMANAGER_H
 #define NOTIFICATIONMANAGER_H
 
-#include "src/Screens/Notifications/infodialog.h"
+#include "src/Screens/Notifications/notificationbanner.h"
 #include "src/Screens/stylesheetcontroller.h"
 
 #include <QObject>
@@ -32,14 +32,14 @@ public:
     void ClearAll();
 
 private:
-    void OnDialogClosed(InfoDialog* dialog);
-    void RepositionDialogs();
+    void OnBannerClosed(NotificationBanner* banner);
+    void RepositionBanners();
 
     QWidget* _parentWidget = nullptr;
     bool _initialized = false;
 
     StyleSheetController _styleSheetController;
-    std::vector<std::shared_ptr<InfoDialog>> _dialogs;
+    std::vector<std::shared_ptr<NotificationBanner>> _banners;
 };
 
 #endif // NOTIFICATIONMANAGER_H
