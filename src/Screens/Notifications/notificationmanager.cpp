@@ -3,10 +3,9 @@
 #include <QDebug>
 #include <format>
 
-NotificationManager& NotificationManager::Get()
+NotificationManager::NotificationManager(QObject* parent)
+    : QObject(parent)
 {
-    static NotificationManager instance;
-    return instance;
 }
 
 void NotificationManager::Initialize(QWidget* parentWidget)
@@ -50,8 +49,7 @@ void NotificationManager::ShowWarning(const QString& text)
 
 void NotificationManager::OnDialogClosed(InfoDialog* dialog)
 {
-    std::erase_if(_dialogs, [dialog](const std::shared_ptr<InfoDialog>& item)
-    {
+    std::erase_if(_dialogs, [dialog](const std::shared_ptr<InfoDialog>& item) {
         return item.get() == dialog;
     });
 
@@ -72,7 +70,6 @@ void NotificationManager::ClearAll()
     {
         dialog->close();
     }
-
     _dialogs.clear();
     _initialized = false;
     _parentWidget = nullptr;

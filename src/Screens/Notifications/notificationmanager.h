@@ -16,7 +16,11 @@ class NotificationManager : public QObject
     Q_OBJECT
 
 public:
-    static NotificationManager& Get();
+    explicit NotificationManager(QObject* parent = nullptr);
+    ~NotificationManager() override = default;
+
+    NotificationManager(const NotificationManager&) = delete;
+    NotificationManager& operator=(const NotificationManager&) = delete;
 
     //! Initializes the notification manager with the root/main widget.
     void Initialize(QWidget* parentWidget);
@@ -24,22 +28,10 @@ public:
     //! Shows an informational warning notification.
     void ShowWarning(const QString& text);
 
-    //! Backward-compatible alias for ShowWarning.
-    void ShowWarningDialog(const QString& text)
-    {
-        ShowWarning(text);
-    }
-
     //! Clears and closes all active notifications.
     void ClearAll();
 
 private:
-    NotificationManager() = default;
-    ~NotificationManager() override = default;
-
-    NotificationManager(const NotificationManager&) = delete;
-    NotificationManager& operator=(const NotificationManager&) = delete;
-
     void OnDialogClosed(InfoDialog* dialog);
     void RepositionDialogs();
 

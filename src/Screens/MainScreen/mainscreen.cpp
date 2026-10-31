@@ -68,7 +68,7 @@ MainScreen::MainScreen(QWidget *parent)
         };
     _dataPreloader.PreloadImages(Assets::kBackgroundsGroup, backgroundsPaths);
 
-    NotificationManager::Get().Initialize(this);
+    _notificationManager.Initialize(this);
     _screenController.Initialize(this, ui->stackedWidget);
     _screenController.CreateScreen(ScreenState::Game, new GameScreen(_screenController, _dataPreloader, this));
     _screenController.CreateScreen(ScreenState::Settings, new SettingsScreen(_screenController, _settingsController, this));
@@ -116,7 +116,7 @@ void MainScreen::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     qDebug() << "closeEvent";
-    NotificationManager::Get().ClearAll();
+    _notificationManager.ClearAll();
     _screenController.CleanAll();
 }
 
@@ -130,7 +130,7 @@ void MainScreen::OnLoadingFinished()
 
 void MainScreen::on_pushButton_clicked()
 {
-    NotificationManager::Get().ShowWarning("Dominik je boss");
+    _notificationManager.ShowWarning("Dominik je boss");
     //_screenController.ShowScreen(ScreenState::Game);
 }
 
