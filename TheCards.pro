@@ -63,6 +63,7 @@ HEADERS += \
     src/Screens/screenmanager.h \
     src/Screens/screenwidget.h \
     src/Screens/stylesheetcontroller.h \
+    src/Settings/settings.h \
     src/Settings/settingscontroller.h \
     src/Settings/settingswriter.h \
     src/Utils/assets.h \

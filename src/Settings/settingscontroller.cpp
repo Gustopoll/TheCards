@@ -1,42 +1,47 @@
 #include "settingscontroller.h"
 
+#include "src/Settings/settings.h"
+
 namespace
 {
-
-constexpr char kDeliminer = '/';
-constexpr std::string EmptyString = "";
-
-constexpr char SettingsGroupGeneral[] = "General";
-constexpr char SettingsGroupGeneralPath[] = "Data/Settings/General";
-
-constexpr char SettingsGroupNetwork[] = "Network";
-constexpr char SettingsGroupNetworkPath[] = "Data/Settings/Network";
+    constexpr char kDelimiter = '/';
+    constexpr std::string EmptyString = "";
 }
 
-SettingsController::SettingsController()
-{
-
-}
+SettingsController::SettingsController() {}
 
 void SettingsController::Load()
 {
-    const auto generalIter = _settings.emplace(SettingsGroupGeneral, SettingsGroupGeneralPath).first;
-    auto& general = generalIter->second;
-    general.SetSettingDefault(Settings::GeneralFullscreen, "false");
-    general.ReadSettings();
+    RegisterGroup(Settings::General::kGroup, Settings::General::kFilePath,
+    {
+        {Settings::General::Fullscreen, Settings::General::FullscreenDefault}
+    });
 
-    const auto networkIter = _settings.emplace(SettingsGroupNetwork, SettingsGroupNetworkPath).first;
-    auto& network = networkIter->second;
-    network.SetSettingDefault(Settings::NetworkServerPort, "3652");
-    network.ReadSettings();
+    RegisterGroup(Settings::Network::kGroup, Settings::Network::kFilePath,
+    {
+        {Settings::Network::ServerPort, Settings::Network::ServerPortDefault}
+    });
+}
 
-    _settingChangedEvent.Fire(Settings::GeneralFullscreen, general.GetSetting(Settings::GeneralFullscreen));
-    _settingChangedEvent.Fire(Settings::NetworkServerPort, network.GetSetting(Settings::NetworkServerPort));
+void SettingsController::RegisterGroup(
+    const std::string& group,
+    const std::string& filePath,
+    std::vector<std::pair<std::string, std::string>> defaults)
+{
+    auto& writer = _settings.emplace(group, filePath).first->second;
+
+    for (const auto& [path, defaultValue] : defaults)
+        writer.SetSettingDefault(path, defaultValue);
+
+    writer.ReadSettings();
+
+    for (const auto& [path, defaultValue] : defaults)
+        _settingChangedEvent.Fire(path, writer.GetSetting(path));
 }
 
 void SettingsController::SetSettingValue(const std::string& path, const std::string& value)
 {
-    const auto& settingsGroup = path.substr(0, path.find_first_of(kDeliminer));
+    const auto& settingsGroup = path.substr(0, path.find_first_of(kDelimiter));
 
     const auto settingsIter = _settings.find(settingsGroup);
     if (settingsIter == _settings.end())
@@ -48,7 +53,7 @@ void SettingsController::SetSettingValue(const std::string& path, const std::str
 
 const std::string& SettingsController::GetSettingValue(const std::string& path)
 {
-    const auto& settingsGroup = path.substr(0, path.find_first_of(kDeliminer));
+    const auto& settingsGroup = path.substr(0, path.find_first_of(kDelimiter));
 
     const auto settingsIter = _settings.find(settingsGroup);
     if (settingsIter == _settings.end())

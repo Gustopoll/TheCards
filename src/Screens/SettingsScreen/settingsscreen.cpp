@@ -1,6 +1,8 @@
 #include "settingsscreen.h"
 #include "ui_settingsscreen.h"
 
+#include "src/Settings/settings.h"
+
 #include <QScreen>
 
 SettingsScreen::SettingsScreen(
@@ -23,8 +25,8 @@ SettingsScreen::~SettingsScreen()
 
 void SettingsScreen::OnScreenActive()
 {
-    ui->serverPort->setText(QString(_settings.GetSettingValue(Settings::NetworkServerPort).c_str()));
-    ui->checkBoxFullscreen->setChecked(_settings.GetSettingValue(Settings::GeneralFullscreen) == "true");
+    ui->serverPort->setText(QString(_settings.GetSettingValue(Settings::Network::ServerPort).c_str()));
+    ui->checkBoxFullscreen->setChecked(_settings.GetSettingValue(Settings::General::Fullscreen) == "true");
 }
 
 void SettingsScreen::OnScreenInactive()
@@ -42,7 +44,7 @@ void SettingsScreen::on_pushButton_clicked()
 
 void SettingsScreen::on_serverPort_textChanged()
 {
-    _settings.SetSettingValue(Settings::NetworkServerPort, ui->serverPort->text().toStdString());
+    _settings.SetSettingValue(Settings::Network::ServerPort, ui->serverPort->text().toStdString());
 }
 
 void SettingsScreen::on_checkBoxFullscreen_checkStateChanged(const Qt::CheckState &arg1)
@@ -52,12 +54,12 @@ void SettingsScreen::on_checkBoxFullscreen_checkStateChanged(const Qt::CheckStat
     {
         qDebug() << "on";
         ui->checkBoxFullscreen->setText("On");
-        _settings.SetSettingValue(Settings::GeneralFullscreen, "true");
+        _settings.SetSettingValue(Settings::General::Fullscreen, "true");
     }
     else
     {
         qDebug() << "off";
         ui->checkBoxFullscreen->setText("Off");
-        _settings.SetSettingValue(Settings::GeneralFullscreen, "false");
+        _settings.SetSettingValue(Settings::General::Fullscreen, "false");
     }
 }

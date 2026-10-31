@@ -7,6 +7,7 @@
 #include "src/Screens/SettingsScreen/settingsscreen.h"
 #include "src/Screens/GameScreen/gamescreen.h"
 #include "src/Screens/Loadings/loadingscreen.h"
+#include "src/Settings/settings.h"
 
 #include <QScreen>
 #include <QDebug>
@@ -29,7 +30,7 @@ MainScreen::MainScreen(QWidget *parent)
     _settingsController.GetSettingChangedEvent().Subscribe(
         [this](const std::string& path, const std::string& value)
         {
-            if (path != Settings::GeneralFullscreen)
+            if (path != Settings::General::Fullscreen)
                 return;
 
             if (value == "true")

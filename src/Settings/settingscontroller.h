@@ -1,18 +1,12 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-
 #include "src/Settings/settingswriter.h"
 #include "src/Utils/eventhandler.h"
 
-namespace Settings
-{
-
-constexpr char GeneralFullscreen[] = "General/Fullscreen";
-constexpr char NetworkServerPort[] = "Network/ServerPort";
-}
-
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <span>
 
 class SettingsController
 {
@@ -37,8 +31,14 @@ public:
     }
 
 private:
+    //! Registers a settings group, applies defaults, reads from disk and fires
+    //! a SettingChangedEvent for every setting in the group.
+    void RegisterGroup(
+        const std::string& group,
+        const std::string& filePath,
+        std::vector<std::pair<std::string, std::string>>  defaults);
+
     std::unordered_map<std::string, SettingsWriter> _settings;
 
     SettingChangedEvent _settingChangedEvent;
 };
-
