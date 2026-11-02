@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
-#include <span>
+
 
 class SettingsController
 {
@@ -36,7 +36,7 @@ private:
     void RegisterGroup(
         const std::string& group,
         const std::string& filePath,
-        std::vector<std::pair<std::string, std::string>>  defaults);
+        std::vector<std::pair<std::string, std::string>> defaults);
 
     std::unordered_map<std::string, SettingsWriter> _settings;
 

@@ -2,7 +2,8 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPaintEvent>
-#include "src/Drawing/Animations/animationmanager.h"
+#include <algorithm>
+#include <cassert>
 
 DrawingWidget::DrawingWidget(QWidget *parent) : QWidget(parent)
 {
@@ -22,25 +23,139 @@ uint32_t DrawingWidget::CreateEntity(
     const float sizeX,
     const float sizeY)
 {
-   const auto entity = std::make_shared<DrawingEntity>(image, x, y, sizeX, sizeY);
+    if (!_isInitialized)
+    {
+        assert(false && "Entity is created before the widget is initialized.");
+        return 0;
+    }
 
-   const auto id = entity->GetId();
-   _entities[id] = entity;
+    const auto entity = std::make_shared<DrawingEntity>(image, x, y, sizeX, sizeY);
 
-   return id;
+    const auto id = entity->GetId();
+    _entities[id] = entity;
+    _orderedEntities.push_back(entity);
+    _isOrderDirty = true;
+
+    return id;
 }
 
-void DrawingWidget::ShowText(
+bool DrawingWidget::RemoveEntity(const uint32_t id)
+{
+    auto it = _entities.find(id);
+    if (it == _entities.end())
+        return false;
+
+    for (auto clickedIt = _clickedEntities.begin(); clickedIt != _clickedEntities.end(); )
+    {
+        if (clickedIt->second.entity && clickedIt->second.entity->GetId() == id)
+            clickedIt = _clickedEntities.erase(clickedIt);
+        else
+            ++clickedIt;
+    }
+
+    _entities.erase(it);
+
+    std::erase_if(
+        _orderedEntities,
+        [id](const auto& entity)
+        {
+            return entity->GetId() == id;
+        });
+
+    update();
+    return true;
+}
+
+void DrawingWidget::ClearEntities()
+{
+    if (!_isInitialized)
+        return;
+
+    _clickedEntities.clear();
+    _entities.clear();
+    _orderedEntities.clear();
+    _isOrderDirty = false;
+    update();
+}
+
+uint32_t DrawingWidget::ShowText(
     const QString& text,
     const float x,
     const float y,
     const float pixelSize,
     const QColor color)
 {
-    _textEntities.emplace_back(text, x, y, pixelSize, color);
+    if (!_isInitialized)
+        return 0;
+
+    const uint32_t id = _nextTextId++;
+    _textEntities.emplace_back(DrawingTextEntity{id, text, x, y, pixelSize, color});
+    update();
+    return id;
 }
 
-const std::shared_ptr<DrawingEntity> DrawingWidget::GetEntity(uint32_t id)
+bool DrawingWidget::UpdateText(const uint32_t id, const QString& text, const QColor& color)
+{
+    if (!_isInitialized)
+        return false;
+
+    auto it = std::ranges::find_if(_textEntities, [id](const auto& item) {
+        return item.id == id;
+    });
+
+    if (it == _textEntities.end())
+        return false;
+
+    it->text = text;
+    it->color = color;
+    update();
+    return true;
+}
+
+bool DrawingWidget::UpdateText(const uint32_t id, const QString& text)
+{
+    if (!_isInitialized)
+        return false;
+
+    auto it = std::ranges::find_if(_textEntities, [id](const auto& item) {
+        return item.id == id;
+    });
+
+    if (it == _textEntities.end())
+        return false;
+
+    it->text = text;
+    update();
+    return true;
+}
+
+bool DrawingWidget::RemoveText(const uint32_t id)
+{
+    if (!_isInitialized)
+        return false;
+
+    const auto count = std::erase_if(_textEntities, [id](const auto& item) {
+        return item.id == id;
+    });
+
+    if (count > 0)
+    {
+        update();
+        return true;
+    }
+    return false;
+}
+
+void DrawingWidget::ClearText()
+{
+    if (!_isInitialized)
+        return;
+
+    _textEntities.clear();
+    update();
+}
+
+std::shared_ptr<DrawingEntity> DrawingWidget::GetEntity(const uint32_t id) const
 {
     auto e = _entities.find(id);
     if (e == _entities.end())
@@ -49,25 +164,120 @@ const std::shared_ptr<DrawingEntity> DrawingWidget::GetEntity(uint32_t id)
     return e->second;
 }
 
-void DrawingWidget::SetEntityAsMovable(uint32_t id)
+void DrawingWidget::SetEntityAsMovable(const uint32_t id, const bool movable)
 {
     const auto entity = GetEntity(id);
     if (!entity)
         return;
 
-    _movableEntities.try_emplace(id, entity);
+    entity->SetMovable(movable);
 }
 
-void DrawingWidget::SetEntityAsClickable(uint32_t id)
+void DrawingWidget::SetEntityAsClickable(const uint32_t id, const bool clickable)
 {
     const auto entity = GetEntity(id);
     if (!entity)
         return;
 
-    _clickableEntities.try_emplace(id, entity);
+    entity->SetClickable(clickable);
 }
 
-void DrawingWidget::MoveEntityTo(uint32_t id, float x, float y)
+void DrawingWidget::SetEntityVisible(const uint32_t id, const bool visible)
+{
+    const auto entity = GetEntity(id);
+    if (!entity)
+        return;
+
+    entity->SetVisible(visible);
+    update();
+}
+
+void DrawingWidget::SetEntityOpacity(const uint32_t id, const float opacity)
+{
+    const auto entity = GetEntity(id);
+    if (!entity)
+        return;
+
+    entity->SetOpacity(opacity);
+    update();
+}
+
+float DrawingWidget::GetEntityOpacity(const uint32_t id) const
+{
+    const auto entity = GetEntity(id);
+    if (entity)
+        return entity->GetOpacity();
+    return 1.0f;
+}
+
+void DrawingWidget::SetEntityZIndex(const uint32_t id, const int zIndex)
+{
+    const auto entity = GetEntity(id);
+    if (!entity)
+        return;
+
+    entity->SetZIndex(zIndex);
+    _isOrderDirty = true;
+    update();
+}
+
+int DrawingWidget::GetEntityZIndex(const uint32_t id) const
+{
+    const auto entity = GetEntity(id);
+    if (entity)
+        return entity->GetZIndex();
+    return 0;
+}
+
+void DrawingWidget::BringEntityToFront(const uint32_t id)
+{
+    const auto entity = GetEntity(id);
+    if (!entity || _orderedEntities.empty())
+        return;
+
+    int maxZ = 0;
+    for (const auto& item : _orderedEntities)
+    {
+        maxZ = std::max(maxZ, item->GetZIndex());
+    }
+
+    entity->SetZIndex(maxZ + 1);
+    _isOrderDirty = true;
+    update();
+}
+
+void DrawingWidget::SendEntityToBack(const uint32_t id)
+{
+    const auto entity = GetEntity(id);
+    if (!entity || _orderedEntities.empty())
+        return;
+
+    int minZ = 0;
+    for (const auto& item : _orderedEntities)
+    {
+        minZ = std::min(minZ, item->GetZIndex());
+    }
+
+    entity->SetZIndex(minZ - 1);
+    _isOrderDirty = true;
+    update();
+}
+
+void DrawingWidget::EnsureEntitiesSorted()
+{
+    if (!_isOrderDirty)
+        return;
+
+    std::ranges::stable_sort(
+        _orderedEntities,
+        [](const auto& a, const auto& b) {
+            return a->GetZIndex() < b->GetZIndex();
+        });
+
+    _isOrderDirty = false;
+}
+
+void DrawingWidget::MoveEntityTo(const uint32_t id, const float x, const float y)
 {
     if (!_isInitialized)
         return;
@@ -81,7 +291,7 @@ void DrawingWidget::MoveEntityTo(uint32_t id, float x, float y)
     update();
 }
 
-void DrawingWidget::ShowGrid(bool enable)
+void DrawingWidget::ShowGrid(const bool enable)
 {
     if (!_isInitialized)
         return;
@@ -98,8 +308,12 @@ void DrawingWidget::paintEvent(QPaintEvent *event)
 
     event->accept();
 
+    EnsureEntitiesSorted();
+
     QPen defaultPen;
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
     if (_showGrid)
     {
@@ -113,12 +327,27 @@ void DrawingWidget::paintEvent(QPaintEvent *event)
         }
     }
 
-    for (const auto& [_, item] : _entities)
+    for (const auto& item : _orderedEntities)
     {
+        if (!item->IsVisible())
+            continue;
+
         const float sizeX = _currentSizeX * item->GetSizeX();
         const float sizeY = _currentSizeY * item->GetSizeY();
         const auto [x, y] = ConvertBlockToPixels(item->GetPosX(), item->GetPosY());
-        painter.drawImage(x, y, item->GetImage()->scaled(sizeX, sizeY/*, Qt::KeepAspectRatio*/));
+        const auto image = item->GetImage();
+
+        const float opacity = item->GetOpacity();
+        const bool hasCustomOpacity = (opacity < 1.0f);
+        if (hasCustomOpacity)
+        {
+            painter.setOpacity(opacity);
+        }
+
+        if (image && !image->isNull())
+        {
+            painter.drawImage(QRectF(x, y, sizeX, sizeY), *image);
+        }
 
         if (item->IsHighlighted())
         {
@@ -129,6 +358,11 @@ void DrawingWidget::paintEvent(QPaintEvent *event)
             painter.drawRect(x, y, sizeX, sizeY);
 
             painter.setPen(defaultPen);
+        }
+
+        if (hasCustomOpacity)
+        {
+            painter.setOpacity(1.0f);
         }
     }
 
@@ -176,15 +410,19 @@ void DrawingWidget::mousePressEvent(QMouseEvent *event)
     {
         const auto [clickedBlockX, clickedBlockY] = ConvertPixelsToBlock(event->pos());
 
-        _clickedEntities.emplace(
-            event->button(),
-            ClickedData{
-                clickedBlockX - clickedEntity->GetPosX(),
-                clickedBlockY - clickedEntity->GetPosY(),
-                clickedEntity
-            });
+        _clickedEntities[event->button()] = ClickedData{
+            clickedBlockX - clickedEntity->GetPosX(),
+            clickedBlockY - clickedEntity->GetPosY(),
+            clickedEntity
+        };
 
-        if (_clickableEntities.contains(clickedEntity->GetId()))
+        if (clickedEntity->IsMovable() && event->button() == Qt::LeftButton)
+        {
+            BringEntityToFront(clickedEntity->GetId());
+            update();
+        }
+
+        if (clickedEntity->IsClickable())
             _entityPressedEvent.Fire(clickedEntity);
     }
 }
@@ -199,12 +437,12 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent *event)
         return;
 
     const auto& clickedData = item->second;
-    if (clickedData.entity && _clickableEntities.contains(clickedData.entity->GetId()))
+    if (clickedData.entity && clickedData.entity->IsClickable())
     {
         _entityReleasedEvent.Fire(clickedData.entity);
     }
 
-    _clickedEntities.erase(event->button());
+    _clickedEntities.erase(item);
 }
 
 void DrawingWidget::mouseMoveEvent(QMouseEvent *event)
@@ -217,7 +455,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent *event)
         return;
 
     auto& clickedData = item->second;
-    if (!clickedData.entity || !_movableEntities.contains(clickedData.entity->GetId()))
+    if (!clickedData.entity || !clickedData.entity->IsMovable())
         return;
 
     const auto [posX, posY] = ConvertPixelsToBlock(event->pos());
@@ -228,14 +466,18 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent *event)
 
 std::shared_ptr<DrawingEntity> DrawingWidget::GetEntityByPosition(const QPoint& position)
 {
-    for (const auto& [_, entity] : _clickableEntities | std::views::reverse)
-    {
-        if (IsPositionInsideEntity(entity, position))
-            return entity;
-    }
+    EnsureEntitiesSorted();
 
-    for (const auto& [_, entity] : _movableEntities  | std::views::reverse)
+    // Iterate backwards (from highest Z-index / top-most to lowest / bottom-most)
+    for (auto it = _orderedEntities.rbegin(); it != _orderedEntities.rend(); ++it)
     {
+        const auto& entity = *it;
+        if (!entity->IsVisible())
+            continue;
+
+        if (!entity->IsClickable() && !entity->IsMovable())
+            continue;
+
         if (IsPositionInsideEntity(entity, position))
             return entity;
     }
@@ -267,6 +509,9 @@ QPoint DrawingWidget::ConvertBlockToPixels(float x, float y)
 
 std::pair<float, float> DrawingWidget::ConvertPixelsToBlock(const QPoint& position)
 {
+    if (_currentSizeX <= 0.0f || _currentSizeY <= 0.0f)
+        return {0.0f, 0.0f};
+
     const float blockX = (position.x() - _currentOffsetX) / _currentSizeX;
     const float blockY = (position.y() - _currentOffsetY) / _currentSizeY;
     return {blockX, blockY};

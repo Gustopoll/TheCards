@@ -8,6 +8,8 @@
 #include <QMouseEvent>
 
 #include <map>
+#include <unordered_map>
+#include <vector>
 
 struct ClickedData
 {
@@ -23,14 +25,16 @@ struct ClickedData
 
 struct DrawingTextEntity
 {
+    //! Unique ID of text entity.
+    uint32_t id = 0;
     //! Text to draw.
     QString text;
     //! X position of text in range [0, maxSizeX]
-    float x;
+    float x = 0.0f;
     //! Y position of text in range [0, maxSizeY].
-    float y;
+    float y = 0.0f;
     //! Size of text.
-    float pixelSize;
+    float pixelSize = 1.0f;
     //! Color of text.
     QColor color;
 };
@@ -45,7 +49,6 @@ public:
     DrawingWidget(QWidget *parent = nullptr);
 
     //! Initialize the screen for drawing entities.
-    //!
     //! This method sets up the drawing area with a coordinate system
     //! that is independent of the screen resolution. The coordinate system
     //! will map the values from the range [0, maxSizeX] and [0, maxSizeY] to
@@ -55,7 +58,6 @@ public:
     void Initialize(uint32_t maxSizeX, uint32_t maxSizeY);
 
     //! Creates the entity.
-    //!
     //! @param image Image of the entity with default properties and size.
     //! @param x X position of entity in range [0, maxSizeX].
     //! @param y Y position of entity in range [0, maxSizeY].
@@ -69,36 +71,67 @@ public:
         float sizeX,
         float sizeY);
 
+    //! Removes an entity by ID.
+    bool RemoveEntity(uint32_t id);
+
+    //! Clears all entities.
+    void ClearEntities();
+
     //! Shows the text.
-    //!
     //! @param text Text to show.
     //! @param x X position of text in range [0, maxSizeX].
     //! @param y Y position of text in range [0, maxSizeY].
-    //! @param sizeX Pixel size of text.
-    void ShowText(
+    //! @param pixelSize Pixel size of text.
+    //! @param color Color of text.
+    //! @return Id of the created text entity.
+    uint32_t ShowText(
         const QString& text,
         float x,
         float y,
         float pixelSize,
         QColor color);
 
-    const std::shared_ptr<DrawingEntity> GetEntity(uint32_t id);
+    //! Updates existing text and color by ID.
+    bool UpdateText(uint32_t id, const QString& text, const QColor& color);
 
-    void SetEntityAsMovable(uint32_t id);
-    void SetEntityAsClickable(uint32_t id);
+    //! Updates existing text content by ID.
+    bool UpdateText(uint32_t id, const QString& text);
+
+    //! Removes a text entity by ID.
+    bool RemoveText(uint32_t id);
+
+    //! Clears all text entities.
+    void ClearText();
+
+    std::shared_ptr<DrawingEntity> GetEntity(uint32_t id) const;
+
+    void SetEntityAsMovable(uint32_t id, bool movable = true);
+    void SetEntityAsClickable(uint32_t id, bool clickable = true);
+    void SetEntityVisible(uint32_t id, bool visible = true);
+
+    //! Sets the opacity of an entity (0.0f transparent to 1.0f opaque).
+    void SetEntityOpacity(uint32_t id, float opacity);
+
+    //! Gets the opacity of an entity.
+    float GetEntityOpacity(uint32_t id) const;
+
+    //! Z-Index and Layering methods.
+    void SetEntityZIndex(uint32_t id, int zIndex);
+    int GetEntityZIndex(uint32_t id) const;
+    void BringEntityToFront(uint32_t id);
+    void SendEntityToBack(uint32_t id);
 
     //! Moves entity to position.
-    //!
-    //! @param Id of entity to move.
+    //! @param id Id of entity to move.
     //! @param x X position of entity in range [0, maxSizeX].
     //! @param y Y position of entity in range [0, maxSizeY].
     void MoveEntityTo(uint32_t id, float x, float y);
 
-    //! Shows gird inside drawing area.
+    //! Shows grid inside drawing area.
     void ShowGrid(bool enable);
 
     //! Gets the X and Y position of initialized max block size.
-    std::pair<uint32_t, uint32_t> GetBlockCount() { return std::make_pair(_maxSizeX, _maxSizeY); }
+    std::pair<uint32_t, uint32_t> GetBlockCount() const { return std::make_pair(_maxSizeX, _maxSizeY); }
 
     EntityPressedEvent::Subscriber& GetEntityPressedEvent()
     {
@@ -116,14 +149,15 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+
 private:
+    //! Ensures entities in _orderedEntities are sorted by Z-index.
+    void EnsureEntitiesSorted();
 
     //! Gets the entity based on position.
-    //!
-    //! It works only for enitites in moving group or in clickable group.
-    //! @param x X position.
-    //! @param y Y position.
-    //! @return Entity.
+    //! Checks visible clickable/movable entities from top to bottom (highest Z to lowest Z).
+    //! @param position Pixel position.
+    //! @return Entity or nullptr.
     std::shared_ptr<DrawingEntity> GetEntityByPosition(const QPoint& position);
 
     //! True when given position is inside the entity, otherwise false.
@@ -136,8 +170,8 @@ private:
     std::pair<float, float> ConvertPixelsToBlock(const QPoint& position);
 
     bool _isInitialized = false;
-
     bool _showGrid = false;
+    bool _isOrderDirty = false;
 
     //! Size of drawing area.
     uint32_t _maxSizeX = 0;
@@ -155,14 +189,13 @@ private:
     //! Holds data for clicked entities.
     std::map<Qt::MouseButton, ClickedData> _clickedEntities;
 
-    //! Map of all movable entities <id, object>..
-    std::map<uint32_t, std::shared_ptr<DrawingEntity>> _movableEntities;
+    //! Fast lookup by ID.
+    std::unordered_map<uint32_t, std::shared_ptr<DrawingEntity>> _entities;
 
-    //! Map of all clickable entities <id, object>.
-    std::map<uint32_t, std::shared_ptr<DrawingEntity>> _clickableEntities;
+    //! Render and hit-test order (sorted by Z-index).
+    std::vector<std::shared_ptr<DrawingEntity>> _orderedEntities;
 
-    //! Map of all entities <id, object>.
-    std::map<uint32_t, std::shared_ptr<DrawingEntity>> _entities;
+    uint32_t _nextTextId = 1;
     std::vector<DrawingTextEntity> _textEntities;
 
     EntityPressedEvent _entityPressedEvent;

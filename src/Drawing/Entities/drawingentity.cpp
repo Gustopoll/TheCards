@@ -1,6 +1,7 @@
 #include "drawingentity.h"
+#include <atomic>
 
-static uint32_t GlobalID = 0;
+static std::atomic<uint32_t> GlobalID{0};
 
 DrawingEntity::DrawingEntity(
     const std::shared_ptr<QImage> image,

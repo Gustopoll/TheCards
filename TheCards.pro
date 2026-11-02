@@ -47,7 +47,6 @@ HEADERS += \
     src/Drawing/Animations/animationmanager.h \
     src/Drawing/Animations/animationrotate.h \
     src/Drawing/Animations/animationscale.h \
-    src/Drawing/Constants.h \
     src/Drawing/Entities/drawingentity.h \
     src/Drawing/Widgets/drawingwidget.h \
     src/GameLogic/buttoncontroller.h \
