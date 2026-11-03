@@ -1,11 +1,13 @@
-#include "buttoncontroller.h"
+#include "buttonview.h"
 
 #include "src/Drawing/Widgets/drawingwidget.h"
+#include "src/Drawing/Entities/drawingentity.h"
 #include "src/Utils/datapreloader.h"
-
 #include "src/Utils/assets.h"
 
-ButtonController::ButtonController(
+#include <QDebug>
+
+ButtonView::ButtonView(
     DrawingWidget* drawingWidget,
     DataPreloader& dataPreloader)
     : _drawingWidget(drawingWidget)
@@ -13,7 +15,7 @@ ButtonController::ButtonController(
 {
 }
 
-void ButtonController::Show()
+void ButtonView::Show()
 {
     const auto buttonsImages = _dataPreloader.GetPreloadedImages(Assets::Buttons::kGroup);
     if (buttonsImages.empty())
@@ -33,14 +35,14 @@ void ButtonController::Show()
     _drawingWidget->SetEntityAsClickable(buttonId);
 }
 
-void ButtonController::OnEntityPressed(std::shared_ptr<DrawingEntity> entity)
+void ButtonView::OnEntityPressed(std::shared_ptr<DrawingEntity> entity)
 {
     qDebug() << entity->GetId() << " is pressed";
     entity->HighlightBorders(Qt::yellow);
     _drawingWidget->update();
 }
 
-void ButtonController::OnEntityReleased(std::shared_ptr<DrawingEntity> entity)
+void ButtonView::OnEntityReleased(std::shared_ptr<DrawingEntity> entity)
 {
     qDebug() << entity->GetId() << " is released";
     entity->ResetHighlightedBorders();

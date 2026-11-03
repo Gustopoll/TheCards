@@ -1,11 +1,10 @@
-#include "enemycontroller.h"
+#include "enemyview.h"
 
 #include "src/Drawing/Widgets/drawingwidget.h"
 #include "src/Utils/datapreloader.h"
-
 #include "src/Utils/assets.h"
 
-EnemyController::EnemyController(
+EnemyView::EnemyView(
     DrawingWidget* drawingWidget,
     DataPreloader& dataPreloader)
     : _drawingWidget(drawingWidget)
@@ -13,7 +12,7 @@ EnemyController::EnemyController(
 {
 }
 
-void EnemyController::Show(const std::vector<Enemy>& enemies)
+void EnemyView::Show(const std::vector<Enemy>& enemies)
 {
     const size_t count = std::min(enemies.size(), _slots.size());
     if (count <= 0)
@@ -33,7 +32,7 @@ void EnemyController::Show(const std::vector<Enemy>& enemies)
     }
 }
 
-void EnemyController::ShowEnemy(
+void EnemyView::ShowEnemy(
     const Slot& slot,
     const Enemy& enemy,
     const std::shared_ptr<QImage>& backCardImage)

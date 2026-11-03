@@ -1,5 +1,5 @@
-#ifndef BUTTONCONTROLLER_H
-#define BUTTONCONTROLLER_H
+#ifndef BUTTONVIEW_H
+#define BUTTONVIEW_H
 
 #include <memory>
 
@@ -7,10 +7,10 @@ class DrawingWidget;
 class DrawingEntity;
 class DataPreloader;
 
-class ButtonController
+class ButtonView
 {
 public:
-    ButtonController(
+    ButtonView(
         DrawingWidget* drawingWidget,
         DataPreloader& dataPreloader);
 
@@ -18,10 +18,10 @@ public:
 
     void OnEntityPressed(std::shared_ptr<DrawingEntity> entity);
     void OnEntityReleased(std::shared_ptr<DrawingEntity> entity);
-private:
 
+private:
     DrawingWidget* _drawingWidget;
     DataPreloader& _dataPreloader;
 };
 
-#endif // BUTTONCONTROLLER_H
+#endif // BUTTONVIEW_H

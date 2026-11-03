@@ -1,11 +1,10 @@
-#include "playercontroller.h"
+#include "playerview.h"
 
 #include "src/Drawing/Widgets/drawingwidget.h"
 #include "src/Utils/datapreloader.h"
-
 #include "src/Utils/assets.h"
 
-PlayerController::PlayerController(
+PlayerView::PlayerView(
     DrawingWidget* drawingWidget,
     DataPreloader& dataPreloader)
     : _drawingWidget(drawingWidget)
@@ -13,7 +12,7 @@ PlayerController::PlayerController(
 {
 }
 
-void PlayerController::ShowCards()
+void PlayerView::ShowCards()
 {
     const auto cardImages = _dataPreloader.GetPreloadedImages(Assets::Cards::kGroup);
     if (cardImages.empty())
@@ -43,7 +42,7 @@ void PlayerController::ShowCards()
     ShowCards(cards, startX, startY + 1, cardWidth, cardHeight, step);
 }
 
-void PlayerController::ShowCards(
+void PlayerView::ShowCards(
     const std::vector<std::shared_ptr<QImage>>& cards,
     const float startPosX,
     const float startPosY,

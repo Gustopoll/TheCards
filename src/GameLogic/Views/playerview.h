@@ -1,24 +1,24 @@
-#ifndef PLAYERCONTROLLER_H
-#define PLAYERCONTROLLER_H
+#ifndef PLAYERVIEW_H
+#define PLAYERVIEW_H
 
 #include <QImage>
 
+#include <memory>
 #include <vector>
 
 class DrawingWidget;
 class DataPreloader;
 
-class PlayerController
+class PlayerView
 {
 public:
-    PlayerController(
+    PlayerView(
         DrawingWidget* drawingWidget,
         DataPreloader& dataPreloader);
 
     void ShowCards();
 
 private:
-
     void ShowCards(
         const std::vector<std::shared_ptr<QImage>>& cards,
         float startPosX,
@@ -31,4 +31,4 @@ private:
     DataPreloader& _dataPreloader;
 };
 
-#endif // PLAYERCONTROLLER_H
+#endif // PLAYERVIEW_H

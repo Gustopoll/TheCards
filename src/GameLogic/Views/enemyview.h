@@ -1,13 +1,17 @@
-#ifndef ENEMYCONTROLLER_H
-#define ENEMYCONTROLLER_H
+#ifndef ENEMYVIEW_H
+#define ENEMYVIEW_H
 
 #include <QImage>
 #include <QString>
 
+#include <array>
+#include <memory>
+#include <vector>
+
 class DrawingWidget;
 class DataPreloader;
 
-class EnemyController
+class EnemyView
 {
 public:
     struct Enemy
@@ -23,11 +27,12 @@ public:
         bool reverseDirection;
     };
 
-    EnemyController(
+    EnemyView(
         DrawingWidget* drawingWidget,
         DataPreloader& dataPreloader);
 
     void Show(const std::vector<Enemy>& enemies);
+
 private:
     void ShowEnemy(
         const Slot& slot,
@@ -46,4 +51,4 @@ private:
     DataPreloader& _dataPreloader;
 };
 
-#endif // ENEMYCONTROLLER_H
+#endif // ENEMYVIEW_H

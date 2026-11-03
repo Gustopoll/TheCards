@@ -2,7 +2,7 @@
 #define GAMESCREEN_H
 
 #include "src/Screens/screenmanager.h"
-#include "src/GameLogic/game.h"
+#include "src/GameLogic/Core/game.h"
 #include "src/Utils/datapreloader.h"
 
 #include <QWidget>
