@@ -14,17 +14,10 @@ void DataPreloader::LoadAll()
             continue;
         }
 
-        for (const auto& path : data.paths)
-        {
-            auto& image = data.images.emplace_back(std::make_shared<QImage>());
-            bool isLoaded = image->load(path.c_str());
-            _imageLoadedEvent.Fire(groupName, path, isLoaded);
-        }
-
-        _imageLoadingFinishedEvent.Fire(groupName);
+        LoadGroup(groupName, data);
     }
 
-    // Pass emptry string to indicate that all the images are loaded.
+    // Pass empty string to indicate that all the images are loaded.
     _imageLoadingFinishedEvent.Fire("");
 }
 
@@ -44,10 +37,15 @@ void DataPreloader::LoadImageGroup(const std::string& groupName)
         return;
     }
 
-    for (const auto& path : groupIter->second.paths)
+    LoadGroup(groupName, group);
+}
+
+void DataPreloader::LoadGroup(const std::string& groupName, PreloadedImageData& data)
+{
+    for (const auto& path : data.paths)
     {
-        auto& image = groupIter->second.images.emplace_back(std::make_shared<QImage>());
-        bool isLoaded = image->load(path.c_str());
+        auto& image = data.images.emplace_back(std::make_shared<QImage>());
+        const bool isLoaded = image->load(path.c_str());
         _imageLoadedEvent.Fire(groupName, path, isLoaded);
     }
 

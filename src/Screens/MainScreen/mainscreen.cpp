@@ -78,6 +78,7 @@ void MainScreen::OnLoadingFinished()
 {
     show();
     _loadingScreen->hide();
+    _loadingScreen->deleteLater();
     _settingsController.Load();
     _screenManager.ShowScreen(ScreenState::Game);
 }

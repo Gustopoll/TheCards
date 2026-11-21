@@ -5,7 +5,7 @@
 
 #include <QImage>
 
-#include <unordered_map>
+#include <map>
 #include <string>
 
 class DataPreloader
@@ -43,13 +43,17 @@ public:
     //! @param paths Paths to the images to preload.
     void PreloadImages(const std::string& groupName, const auto& paths)
     {
+        Q_ASSERT_X(!_preloadedImages.contains(groupName),
+                   "DataPreloader::PreloadImages",
+                   "Group already registered. Each group name must be unique.");
+
         _preloadedImages[groupName] = PreloadedImageData(std::vector<std::string>(std::begin(paths), std::end(paths)), {});
     }
 
     //! Gets all the preloaded images by the group name.
     std::vector<std::shared_ptr<QImage>> GetPreloadedImages(const std::string& groupName);
 
-    //! Gets the size of the images to preload.
+    //! Gets the total number of images registered across all groups.
     size_t GetPreloadedImagesCount();
 
     ImageLoadedEvent::Subscriber& GetImageLoadedEvent()
@@ -61,11 +65,15 @@ public:
     {
         return _imageLoadingFinishedEvent.GetSubscriber();
     }
+
 private:
+    //! Loads all images in the given group and fires the appropriate events.
+    void LoadGroup(const std::string& groupName, PreloadedImageData& data);
+
     ImageLoadedEvent _imageLoadedEvent;
     ImageLoadingFinishedEvent _imageLoadingFinishedEvent;
 
-    std::unordered_map<std::string, PreloadedImageData> _preloadedImages;
+    std::map<std::string, PreloadedImageData> _preloadedImages;
 };
 
 #endif // DATAPRELOADER_H

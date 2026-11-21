@@ -5,6 +5,8 @@
 #include <QFutureWatcher>
 #include <QMainWindow>
 
+#include <atomic>
+
 namespace Ui {
 class LoadingScreen;
 }
@@ -27,10 +29,13 @@ private:
 
     QFutureWatcher<void>* watcher;
 
-    size_t _countPreloadedData = 0;
+    std::atomic<size_t> _countPreloadedData = 0;
     size_t _countDataToPreload = 0;
 
     DataPreloader& _dataPreloader;
+
+    //! Subscription IDs used to unsubscribe events in the destructor.
+    EventHandler<const std::string&, const std::string&, bool>::SubscriptionId _imageLoadedSubId;
 };
 
 #endif // LOADINGSCREEN_H

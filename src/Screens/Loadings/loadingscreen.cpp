@@ -1,20 +1,19 @@
 #include "loadingscreen.h"
 #include "ui_loadingscreen.h"
 
-#include "src/Utils/assets.h"
 #include "src/Screens/MainScreen/mainscreen.h"
 
 #include <QtConcurrent>
 
 LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
-    : QMainWindow(reinterpret_cast<QMainWindow*>(parent))
+    : QMainWindow(parent)
     , ui(new Ui::LoadingScreen)
     , _dataPreloader(dataPreloader)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint, true);
 
-    watcher = new QFutureWatcher<void>();
+    watcher = new QFutureWatcher<void>(this);
     _countPreloadedData = 0;
     _countDataToPreload = _dataPreloader.GetPreloadedImagesCount();
     ui->progressBar->setValue(_countPreloadedData);
@@ -29,11 +28,11 @@ LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
             parent->OnLoadingFinished();
         });
 
-    _dataPreloader.GetImageLoadedEvent().Subscribe(
+    _imageLoadedSubId = _dataPreloader.GetImageLoadedEvent().Subscribe(
         [this](const std::string& groupName, const std::string& path, const bool isLoaded)
         {
             Q_UNUSED(groupName);
-            ++_countPreloadedData;
+            const size_t count = ++_countPreloadedData;
 
             if (!isLoaded)
             {
@@ -41,13 +40,18 @@ LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
             }
 
             const auto text = QString::fromStdString(std::format("Loading data ... [{}/{}] {}",
-                _countPreloadedData,
+                count,
                 _countDataToPreload,
                 path));
 
             qDebug() << text;
-            ui->progressBar->setValue(_countPreloadedData);
-            ui->textLoading->setText(text);
+
+            // Fire onto the main thread – this callback runs in a QtConcurrent worker thread.
+            QMetaObject::invokeMethod(this, [this, count, text]()
+            {
+                ui->progressBar->setValue(count);
+                ui->textLoading->setText(text);
+            }, Qt::QueuedConnection);
         });
 
     watcher->setFuture(QtConcurrent::run(
@@ -59,11 +63,11 @@ LoadingScreen::LoadingScreen(DataPreloader& dataPreloader, MainScreen *parent)
 
 LoadingScreen::~LoadingScreen()
 {
+    _dataPreloader.GetImageLoadedEvent().Unsubscribe(_imageLoadedSubId);
     delete ui;
 }
 
 void LoadingScreen::on_closeButton_clicked()
 {
-    exit(0);
+    qApp->quit();
 }
-
